@@ -1,0 +1,101 @@
+ 
+ .newBook{
+    width: 1150px;
+    height: 650px;
+    margin-top: -320px;
+    margin-left: 210px;
+ }
+
+ .coverDisplay{
+     width: 350px;
+     height: 450px;
+     border: .5px solid grey;
+     position: absolute;
+     margin: 40px 50px;
+ }
+
+ .bookImg .coverDisplay{
+     position: absolute;
+ }
+
+ .coverDisplay .image{
+     position:absolute;
+     height: 100%;
+     width: 100%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+
+ .coverDisplay .image img{
+     height: 100%;
+     width: 100%;
+ }
+
+ .material-icons.addPhoto{
+    font-size: 250px;
+    color: #3E3E3E;
+    margin: 40px 50px;
+ }
+ 
+.bookImg input{
+    display: none;
+}
+
+.bookImg label{
+    display: block;
+    height: 40px;
+    width: 130px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 17px;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: absolute;
+    margin: 510px 160px;
+    cursor: pointer;
+}
+
+ .bookInfo {
+    display: flex;
+    flex-direction: column;
+ 
+    margin-left: 480px;
+
+ }
+.bookInfo input {
+    width: 600px;
+    height: 20px;
+    color: #202020;
+    font-size: medium;
+    padding-left: 3px;
+    border: .8px solid black;
+}
+
+.bookInfo label{
+    padding-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #202020;
+}
+
+.bookInfo textarea{
+    width:600px;
+    font-size: medium;
+    color: #202020;
+    padding-left: 3px;
+}
+
+.bookInfo button.addBookBtn {
+    height: 40px;
+    width: 155px;
+    font-size: 18px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: relative;
+    margin: 40px 230px;
+    cursor: pointer;
+}

@@ -1,0 +1,158 @@
+h3{
+    margin: 195px 45px;
+    font-size: 35px;
+    color: #202020;
+    position: fixed;
+    z-index: -1;
+}
+
+.cart-bkgrnd{
+    position: fixed;
+    width: 100%;
+    height: 33%;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    z-index: -2;
+}
+
+.my-cart{
+    margin: 260px 90px;
+    position: absolute;
+    z-index: -3;
+}
+
+.my-cart-books{
+    width: 800px;
+    padding-bottom: 25px;
+
+}
+
+.my-cart-book-img{
+    border: 1px outset black;
+    width: 160px;
+    height: 220px;
+}
+
+.my-cart-book-info{
+    width: auto;
+    margin: -210px 180px;
+    position: absolute;
+    font-size: large;
+    font-weight: 200;
+}
+
+.cart-book-info{
+    padding-bottom: 10px;
+}
+
+.my-cart-book-info button{
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    cursor: pointer;
+}
+
+.remove-book-btn{
+    font-weight: 200;
+}
+
+
+.qty-box{
+    border: .5px outset black;
+    width: 15px;
+    padding: 10px;
+    text-align: center;
+    font-size: larger;
+    margin: 5px 30px;
+}
+
+.qty-btn{
+    font-size: 30px;
+    font-weight: 100;
+}
+
+.qty-sub{
+    margin: 0px 0px;
+}
+
+.qty-add{
+    margin: -53px 75px;
+}
+
+.remove-book-btn{
+    font-size:medium;
+}
+
+.remove-book-btn:hover{
+    text-decoration: underline;
+}
+
+.discount {
+    display: flex;
+    flex-direction: column;
+    margin: 250px 970px;
+    position: fixed;
+    z-index: -1;
+}
+.discount input{
+    width: 250px;
+    height: 20px;
+    border: 1px solid grey;
+    color: #202020;
+    padding-left: 3px;
+    font-size: 16px;
+}
+.discount label{
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 10px;
+    color: #202020;
+}
+.discount button.applyBtn{
+    height: 35px;
+    width: 120px;
+    font-size: 15px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: relative;
+    margin: 10px 70px;
+    cursor: pointer;
+}
+
+.price{
+    display: flex;
+    flex-direction: column;
+    margin: 480px 970px;
+    position: fixed;
+    z-index: -1;
+}
+.price label{
+    font-size: 20px;
+    font-weight: bold;
+    color: #202020;
+    padding-bottom: 10px;
+}
+
+.cart-total{
+    margin: -160px 800px;
+    position: absolute;
+}
+
+
+
+.price button.checkoutBtn{
+    height: 35px;
+    width: 120px;
+    font-size: 19px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: relative;
+    margin: 10px 70px;
+    cursor: pointer;
+}

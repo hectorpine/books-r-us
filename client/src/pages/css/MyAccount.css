@@ -1,0 +1,39 @@
+.accountInfo {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    margin-left: 250px;
+    margin-top: 210px;
+    z-index: -1;
+ }
+
+ .accountInfo input {
+    width: 600px;
+    height: 22px;
+    color: #202020;
+    font-size: medium;
+    padding-left: 3px;
+    border: .8px solid black;
+}
+
+.accountInfo label{
+    padding-top: 25px;
+    padding-bottom: 2px;
+    font-size: 16px;
+    color: #202020;
+    font-weight: bold;
+    color: #3E3E3E;
+}
+
+.accountInfo button.saveBtn{
+    height: 40px;
+    width: 155px;
+    font-size: 18px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: relative;
+    margin: 40px 230px;
+    cursor: pointer;
+}

@@ -1,4 +1,3 @@
-import './App.css';
 import { useState, useReducer, useEffect } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';

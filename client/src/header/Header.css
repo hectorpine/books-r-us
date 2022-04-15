@@ -1,0 +1,325 @@
+.header{
+  position: fixed;
+}
+
+.header-bkgrnd{
+  position: fixed;
+  width: 100%;
+  height: 188px;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  z-index: -2;
+}
+
+.banner {
+  margin-left: auto;
+  margin-right: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  width: 100%;
+  background: #19394A;
+  position: fixed;
+  }
+
+.homeBtn{
+  background-color: transparent;
+  border: none;
+  position:absolute;
+  margin: 45px 50px;
+  cursor: pointer;
+}
+
+.search input {
+  border: 1px outset black;
+  width: 650px;
+  height: 30px;
+  position: fixed;
+  font-size: medium;
+ 
+  padding-inline-start: 5px;
+  margin: 80px 320px;
+
+}
+::placeholder{
+  font-size: medium;
+}
+
+.searchButton button{
+  background-color: transparent;
+  border: 1px outset black;
+  width: 40px;
+  height: 34px;
+  position: fixed;
+  margin: 80px 977px;
+  cursor:pointer;
+}
+
+.shopingCart button{
+  background-color: transparent;
+  border: none;
+  width: 40px;
+  height: 30px;
+  position: fixed;
+  margin: 100px 1050px;
+  cursor:pointer;
+}
+
+
+.dropdown {
+  position: absolute;
+  display: inline-block;
+  padding: 2px;
+  height: 30px;
+  width: 125px;
+  margin: 53px 1066px;
+}
+
+.accountIcon{
+    position: fixed;
+    margin: 56px 1048px;
+}
+.expandIcon{
+  position: fixed;
+  margin: 56px 1180px;
+}
+
+.dropbtn {
+  background-color: transparent;
+  color: #202020;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+
+.dropdown-content {
+  border: 1px solid black;
+  display: none;
+  position: absolute;
+  background-color:  white;
+  margin-left: -19px;
+  min-width: 150px;
+  min-height: 100px;
+  z-index: 1;
+}
+
+.signIn button.signInBtn {
+    height: 40px;
+    width: 120px;
+    font-size: 22px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: relative;
+    margin-left: 15px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.createAccount button.createAccountBtn {
+  border: none;
+  font-size: 15px;
+  color: #202020;
+  background-color: transparent;
+  position: relative;
+  margin-left: 17px;
+  margin-top: 15px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: transparent;
+}
+
+hr {
+  width: 1367px;
+  height: 1px;
+  border:  none;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 180px;
+  margin-bottom:100px;
+  position: fixed;
+  background-color: grey;
+  z-index: -1;
+}
+
+
+.modal {
+display: none;
+position: fixed;
+z-index: 1;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgb(0,0,0);
+background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  display: flex;
+  flex-direction:column;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1.5px solid #202020;
+}
+
+.modal-content ::placeholder{
+  font-size: large;
+}
+#signInModal .modal-content{
+  width: 550px;
+  height: 500px;
+}
+#signInModal input{
+  width: 500px;
+  height: 40px;
+  font-size: large;
+  padding-inline-start: 5px;
+  border: 1px solid #202020;
+}
+.sign-in-label{
+  font-size: 25px;
+  font-weight: bold;
+  color: #202020;
+  margin: 0 21px;
+}
+.sign-in-email{
+  margin: 50px auto;
+}
+.sign-in-passwrd{
+  margin: 0 auto;
+}
+.sign-in-btn{
+  width: 130px;
+  margin: 45px auto;
+}
+.create-acc-btn{
+  width: 160px;
+  margin: 0 auto;
+  
+}
+#signInModal button{
+  height: 50px;
+  font-size: 20px;
+  border: none;
+  color: white;
+  background-color: #19394A;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+
+#createAccountModal .modal-content{
+  width: 550px;
+  height: 600px;
+}
+
+.cMssg1{
+  font-size: 25px;
+  font-weight: bold;
+  color: #202020;
+  margin: 0 21px;
+  position: absolute;
+}
+.cMssg2{
+  font-size: 18px;
+  font-weight: lighter;
+  color: #202020;
+  margin: 18px 21px;
+  position: absolute;
+}
+.createMssg button.signInBtn{
+  background-color: transparent;
+  font-size: 18px;
+  font-weight: lighter;
+  border: none;
+  position: absolute;
+  margin: 16px 237px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#createAccountModal input{
+  width: 500px;
+  height: 40px;
+  font-size: large;
+  padding-inline-start: 5px;
+  border: 1px solid #3E3E3E;
+}
+
+.create-fname{
+  margin: 70px auto 0 auto;
+}
+.create-lname{
+  margin: 40px auto 0 auto;
+}
+.create-phone{
+  margin: 40px auto 0 auto;
+}
+.create-email{
+  margin: 40px auto 0 auto;
+}
+.create-passwd{
+  margin: 40px auto 0 auto;
+}
+.createAccBtn{
+  height: 48px;
+  width: 170px;
+  font-size: 17px;
+  border: none;
+  color: white;
+  background-color: #19394A;
+  border-radius: 10px;
+  position: relative;
+  margin: 30px auto 0 auto;
+  cursor: pointer;
+}
+
+
+
+
+.close {
+  width: 20px;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 0 90%;
+  }
+
+.close:hover,
+.close:focus {
+color: black;
+text-decoration: none;
+cursor: pointer;
+}
+
+.close2 {
+  width: 20px;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 0 90%;
+  }
+
+.close2:hover,
+.close2:focus {
+color: black;
+text-decoration: none;
+cursor: pointer;
+}

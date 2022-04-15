@@ -1,0 +1,67 @@
+h2 {
+    font-size: 50px;
+    color: #202020;
+    position: absolute;
+    margin-top: 5px;
+    margin-left: 50px;
+}
+
+.header2 button.signoutBtn {
+    height: 40px;
+    width: 125px;
+    font-size: 20px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: relative;
+    margin-left: 1150px;
+    margin-top: 18px;
+    cursor: pointer;
+}
+
+.vl {
+    height: 500px;
+    width: 1px;
+    position: absolute;
+    margin-left: 200px;
+    margin-top: 50px;
+    background-color: grey;
+  }
+
+
+.hl {
+    height: 1px;
+    width: 100%;
+    margin-top: 35px;
+    background-color: grey;
+  }
+
+#sidebarLinks button.adminAddBtn{
+    margin-top: 60px;
+}
+
+#sidebarLinks button{
+    border: none;
+    background-color: transparent;
+    font-size: 19px;
+    color: #202020;
+    padding: 15px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+.l1 {
+    height: 1px;
+    width: 140px;
+    margin-left: 30px;
+    background-color: grey;
+    position: absolute;
+}
+
+/*
+.adminAddBtn {
+    font-weight: bold;
+    
+  }
+  */
