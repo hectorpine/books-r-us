@@ -12,6 +12,8 @@ const reducer = (state, action) => {
     case 'RETRIEVE_CART':
       // console.log('reducer()');
       return { ...state, inCart: action.payload, loading: false };
+    case 'PULL_USERS':
+      return { ...state, userList: action.payload, loading: false };
     default:
       return state;
   }
@@ -23,9 +25,10 @@ function App() {
   // these arrays are declared from an empty state, when the reducer function is
   //dispatched, an axios request is made to an express router in order to retrieve
   //the list of "product" objects as an array.
-  const [{ products, inCart }, dispatch] = useReducer(reducer, {
+  const [{ products, inCart, userList }, dispatch] = useReducer(reducer, {
     products: [],
     inCart: [],
+    userList: [],
   });
   ////////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +67,18 @@ function App() {
     fetchCart();
   }, []); //////ADD BRACKETS FOR CART FUNCTION
   /////////////////////////////////////////////////////////
+
+  //ADMIN USER ACCOUNT CHANGES useEffect() hook needed to load all users
+  useEffect(() => {
+    const fetchCart = async () => {
+      const list = await axios.get('/api/users/pull');
+      // console.log(mongoCart.data);
+      dispatch({ type: 'PULL_USERS', payload: list.data });
+    };
+    fetchCart();
+  }, []);
+
+  //////////////////////////////////////////////////////////////////
 
   ////useState() hook used to create and "input" object that
   ///includes all of the needed fields to create new book item
@@ -104,6 +119,18 @@ function App() {
     stockEdit: '',
     descriptionEdit: '',
   });
+  ///////////////////////////////////////////
+
+  /// hook for EDITING USER ACCOUNTS
+
+  const [editAccount, setAccount] = useState({
+    _id: '',
+    nameEdit: '',
+    emailEdit: '',
+    isAdminEdit: '',
+  });
+
+  /////////////////////////////////
 
   ////handleChange() is the handler used to manage changing
   ///text input within each field of the "New Sale Item" form
@@ -341,11 +368,112 @@ function App() {
 
   /////
 
+  ///EDIT USER ACCOUNT FIELD CHANGE
+  function userFieldChange(event) {
+    const { name, value } = event.target;
+    setAccount((prevInput) => {
+      return {
+        ...prevInput,
+        [name]: value,
+      };
+    });
+  }
+
+  /////////////////////////////////
+  //USER ACCOUNT EDIT filed population
+  function accountToEdit(account) {
+    setAccount(() => {
+      return {
+        _id: account._id,
+        nameEdit: account.name,
+        emailEdit: account.email,
+        isAdminEdit: account.isAdmin,
+      };
+    });
+  }
+
+  /////////////////////////////////////////////////
+
+  /////Submit change for item
+  function pushAccountChange(product, event) {
+    event.preventDefault();
+
+    const id = editAccount._id;
+    const newName = editAccount.nameEdit;
+    const newEmail = editAccount.emailEdit;
+    const adminStatus = editAccount.isAdminEdit;
+    console.log(adminStatus);
+
+    axios.put('/api/users/editaccounts', {
+      _id: id,
+      name: newName,
+      email: newEmail,
+      isAdmin: adminStatus,
+    });
+
+    // console.log(editedBook);
+  }
+  /////////////////////////////
+
+  //deleteAccount handler
+  function deleteAccountHandler(account, event){
+    const id = account._id;
+    axios.delete(`/api/users/deleteaccount/${id}`);
+
+  }
+  ////////////////////////////
+
   return (
     <div>
       {/**Header Buttons, no functionality */}
       <a href="/profile">Signin/User</a>
       {/**Header Buttons, no functionality */}
+      {/*Edit User */}
+      <h3>Admin User Account Changes</h3>
+      <div>
+        {userList.map((account) => (
+          <div key={account._id} sm={6} md={4} lg={3} className="mb-3">
+            <div>
+              Name: {account.name} || Email: {account.email} || Admin Status:
+              {account.isAdmin ? 'true' : 'false'}
+              {'  '}
+              <button onClick={() => accountToEdit(account)}> Edit User</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <input
+          onChange={userFieldChange}
+          name="nameEdit"
+          value={editAccount.nameEdit}
+          className="form-control"
+          placeholder="Name"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={userFieldChange}
+          name="emailEdit"
+          value={editAccount.emailEdit}
+          className="form-control"
+          placeholder="Email"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={userFieldChange}
+          name="isAdminEdit"
+          value={editAccount.isAdminEdit}
+          className="form-control"
+          placeholder="Admin Status"
+        ></input>
+      </div>
+      <button onClick={(event) => pushAccountChange(editAccount, event)}>
+        Submit Change
+      </button>
+      <button onClick={(event) => deleteAccountHandler(editAccount,event)}> Delete</button>
+      {/*Edit User */}
       {/**Edit items */}
       <h3>EDIT ITEMS</h3>
       <div>
