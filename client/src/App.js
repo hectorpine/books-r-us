@@ -14,6 +14,8 @@ const reducer = (state, action) => {
       return { ...state, inCart: action.payload, loading: false };
     case 'PULL_USERS':
       return { ...state, userList: action.payload, loading: false };
+    case 'PULL_ORDERS':
+      return { ...state, totalOrders: action.payload, loading: false };
     default:
       return state;
   }
@@ -25,11 +27,15 @@ function App() {
   // these arrays are declared from an empty state, when the reducer function is
   //dispatched, an axios request is made to an express router in order to retrieve
   //the list of "product" objects as an array.
-  const [{ products, inCart, userList }, dispatch] = useReducer(reducer, {
-    products: [],
-    inCart: [],
-    userList: [],
-  });
+  const [{ products, inCart, userList, totalOrders }, dispatch] = useReducer(
+    reducer,
+    {
+      products: [],
+      inCart: [],
+      userList: [],
+      totalOrders: [],
+    }
+  );
   ////////////////////////////////////////////////////////////////////////////
 
   /////useState  hook used to compare and filter through matching strings
@@ -65,20 +71,33 @@ function App() {
       dispatch({ type: 'RETRIEVE_CART', payload: mongoCart.data });
     };
     fetchCart();
-  }, []); //////ADD BRACKETS FOR CART FUNCTION
+  }); //////ADD BRACKETS FOR CART FUNCTION
   /////////////////////////////////////////////////////////
 
   //ADMIN USER ACCOUNT CHANGES useEffect() hook needed to load all users
   useEffect(() => {
-    const fetchCart = async () => {
+    const fetchUsers = async () => {
       const list = await axios.get('/api/users/pull');
       // console.log(mongoCart.data);
       dispatch({ type: 'PULL_USERS', payload: list.data });
     };
-    fetchCart();
+    fetchUsers();
   }, []);
 
   //////////////////////////////////////////////////////////////////
+
+  //Admin TOTAL ORDERS useEffect() hook needed to pull all orders from database
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const allOrders = await axios.get('/api/orders/requestall');
+      dispatch({ type: 'PULL_ORDERS', payload: allOrders.data });
+    };
+    fetchOrders();
+    // console.log(totalOrders.items);
+  }, []);
+
+  /////////////////////////////////////////////////////////////////////////////
 
   ////useState() hook used to create and "input" object that
   ///includes all of the needed fields to create new book item
@@ -416,18 +435,76 @@ function App() {
   /////////////////////////////
 
   //deleteAccount handler
-  function deleteAccountHandler(account, event){
+  function deleteAccountHandler(account, event) {
     const id = account._id;
     axios.delete(`/api/users/deleteaccount/${id}`);
-
   }
   ////////////////////////////
+  function placeOrderHandler(event) {
+    const currentCart = inCart;
+    const orderItems = { items: currentCart };
 
+    axios.post('/api/orders/neworder', orderItems);
+  }
+
+  //////
+
+  ///print info
+  function printInfo() {
+    console.log(inCart);
+    console.log(totalOrders);
+  }
+  //////////////////////
   return (
     <div>
       {/**Header Buttons, no functionality */}
       <a href="/profile">Signin/User</a>
       {/**Header Buttons, no functionality */}
+      {/**Display Orders */}
+      <h3>Orders</h3>
+      <button onClick={() => printInfo()}>PRINT</button>
+      <div>
+        {''}
+        {totalOrders.map((order) => (
+          <div key={order._id} sm={6} md={4} lg={3} className="mb-3">
+            <div>
+              Order: {order._id}
+              <div>
+                {order.items.map((item)=>(
+                  <div key={item._id} sm={6} md={4} lg={3} className="mb-3">
+                    Item: {item.title} Qty: {item.quantity} Price: ${item.price}
+                  </div>
+                ))}
+              </div>
+              -----------------------------------------------
+            </div>
+          </div>
+        ))}
+        {''}
+      </div>
+      {/**Display Orders */}
+      {/**CART DISPLAY */}
+      <h3>Cart</h3>
+      <div>
+        {inCart.map((product) => (
+          <div key={product.itemId} className="mb-3">
+            <div>
+              {product.title}
+              <button>-</button>Qty: {product.quantity}
+              <button onClick={() => addOne(product, product.quantity + 1)}>
+                +
+              </button>
+              ${product.price}{' '}
+              <button onClick={() => removeFromCart(product)}> remove</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <text>Order Total : ${cartTotal}</text>
+      </div>
+      <button onClick={(event) => placeOrderHandler(event)}>Place Order</button>
+      {/**CART DISPLAY */}
       {/*Edit User */}
       <h3>Admin User Account Changes</h3>
       <div>
@@ -472,7 +549,10 @@ function App() {
       <button onClick={(event) => pushAccountChange(editAccount, event)}>
         Submit Change
       </button>
-      <button onClick={(event) => deleteAccountHandler(editAccount,event)}> Delete</button>
+      <button onClick={(event) => deleteAccountHandler(editAccount, event)}>
+        {' '}
+        Delete
+      </button>
       {/*Edit User */}
       {/**Edit items */}
       <h3>EDIT ITEMS</h3>
@@ -613,27 +693,7 @@ function App() {
         />
       </div>
       {/*SERACH BAR  */}
-      {/**CART DISPLAY */}
-      <h3>Cart</h3>
-      <div>
-        {inCart.map((product) => (
-          <div key={product.itemId} className="mb-3">
-            <div>
-              {product.title}
-              <button>-</button>Qty: {product.quantity}
-              <button onClick={() => addOne(product, product.quantity + 1)}>
-                +
-              </button>
-              ${product.price}{' '}
-              <button onClick={() => removeFromCart(product)}> remove</button>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div>
-        <text>Order Total : ${cartTotal}</text>
-      </div>
-      {/**CART DISPLAY */}
+
       {/**NEW SALE ITEM FORM */}
       <div>
         <div>
