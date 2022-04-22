@@ -4,20 +4,25 @@ import './font.css';
 import { useReducer, useEffect } from 'react';
 import axios from 'axios';
 
+
 ////This is needed to load all of the books and to load all of the cart items
 ///For more info please see " React hooks, useReducer()"
 const reducer = (state, action) => {
-    switch (action.type) {
-      case 'PULL_INVENTORY':
-        return { ...state, products: action.payload, loading: false };
-      case 'RETRIEVE_CART':
-        console.log('reducer()');
-        return { ...state, inCart: action.payload, loading: false };
-      default:
-        return state;
-    }
-  };
-  ////////////////////////////////////////////////////////////////////////////
+  switch (action.type) {
+    case 'PULL_INVENTORY':
+      return { ...state, products: action.payload, loading: false };
+    case 'RETRIEVE_CART':
+      // console.log('reducer()');
+      return { ...state, inCart: action.payload, loading: false };
+    case 'PULL_USERS':
+      return { ...state, userList: action.payload, loading: false };
+    case 'PULL_ORDERS':
+      return { ...state, totalOrders: action.payload, loading: false };
+    default:
+      return state;
+  }
+};
+////////////////////////////////////////////////////////////////////////////
 
 const Cart = () =>{
 
@@ -25,11 +30,17 @@ const Cart = () =>{
   // these arrays are declared from an empty state, when the reducer function is
   //dispatched, an axios request is made to an express router in order to retrieve
   //the list of "product" objects as an array.
-  const [{ inCart }, dispatch] = useReducer(reducer, {
-    products: [],
-    inCart: [],
-  });
+  const [{ inCart }, dispatch] = useReducer(
+    reducer,
+    {
+      products: [],
+      inCart: [],
+      userList: [],
+      totalOrders: [],
+    }
+  );
   ////////////////////////////////////////////////////////////////////////////
+
 
   /////useEffect() hook sends get request to load "products" array,
   /////as well as inCart array via their reducer functions
@@ -79,6 +90,16 @@ const Cart = () =>{
   };
   //////////////////////////////////////////
 
+
+  ///addOne() handler increases number of item quantity in cart by one
+  const removeOne = (product, quantity) => {
+    const newQuant = product.quantity - 1;
+    const id = product._id;
+    axios.put('/api/cartitems/increase', { quantity: newQuant, _id: id }); //.then(fetchCart());
+  };
+  //////////////////////////////////////////
+
+
   ///uses .reduce() function to return
   ///total price of items including tax
   let { cartTotal } = inCart.reduce(
@@ -89,6 +110,28 @@ const Cart = () =>{
     },
     {
       cartTotal: 0,
+    }
+  );
+
+  let { subTotal } = inCart.reduce(
+    (total, cartItem) => {
+      const { price, quantity } = cartItem;
+      total.subTotal += price * quantity;
+      return total;
+    },
+    {
+      subTotal: 0,
+    }
+  );
+
+  let { tax } = inCart.reduce(
+    (total, cartItem) => {
+      const { price, quantity } = cartItem;
+      total.tax += (price * quantity * .0825);
+      return total;
+    },
+    {
+      tax: 0,
     }
   );
   ////////////////////////////////////////////
@@ -108,13 +151,15 @@ const Cart = () =>{
             <div>
                 {inCart.map((product) => (
                 <div key={product.itemId} className="my-cart-books">
+                  
                     <div className="my-cart-book-img"></div>
+
                     <div className="my-cart-book-info">
                         <div className="my-cart-book-title cart-book-info">{product.title}</div>
                         <div className="my-cart-book-author cart-book-info">Book Author</div>
                         <div className="my-cart-book-price cart-book-info">${product.price}{' '}</div>
                         <div className="my-cart-book-qty cart-book-info">
-                            <button className="qty-sub qty-btn">-</button>
+                            <button className="qty-sub qty-btn" onClick={() => removeOne(product, product.quantity - 1)}>-</button>
                             <div className="qty-box">{product.quantity}</div>
                             <button className="qty-add qty-btn" onClick={() => addOne(product, product.quantity + 1)}>+</button>
                         </div>
@@ -134,10 +179,10 @@ const Cart = () =>{
         </div>
 
         <div className="price">
-            <label>Subtotal: </label>
+            <label>Subtotal: ${subTotal.toFixed(2)}</label>
             <label>Discount: </label>
-            <label>Tax: </label>
-            <label>Total: ${cartTotal}</label>
+            <label>Tax: ${tax.toFixed(2)}</label>
+            <label>Total: ${cartTotal.toFixed(2)}</label>
             <button className="checkoutBtn">Checkout</button>
         </div>
         

@@ -2,28 +2,66 @@ import React from "react";
 import './Header.css';
 import '../pages/font.css'
 import { useState } from "react";
-import Axios from 'axios';
 import { Outlet, Link } from "react-router-dom";
 import axios from 'axios';
 
+
+
 const Header = () => {
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [phone, setPhone] = useState("");
-    const [email,setEmail] = useState("");
-    const [password,setPassword] = useState("");
-    const [loginStatus, setLoginStatus] = useState("");
-
-
     
+
+  ///hook used to get information from user input fields
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
+  ////////////////////////////////////////////////////////////////////////////////////
+
   ///hook for SIGN IN form functionality
   const [signfield, setSignIn] = useState({
     email: '',
     password: '',
   });
-  ///////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////
 
+  ///NEW USER CREATION HANDLER
+  function createUser(event) {
+    event.preventDefault();
+    const newUser = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+    };
+    console.log(newUser);
+    axios.post('/api/users/newaccount', newUser);
+  }
+  ////////////////////////////////////////////////////////////////////////////////////
+
+  /// user registration form field changes
+  function handleFormChange(event) {
+    const { name, value } = event.target;
+    setForm((prevForm) => {
+      return {
+        ...prevForm,
+        [name]: value,
+      };
+    });
+  }
+  ////////////////////////////////////////////////////////////////////////////////////
+
+  /////USER SIGN IN FIELDS
+  function handleSignInFields(event) {
+    const { name, value } = event.target;
+    setSignIn((values) => {
+      return {
+        ...values,
+        [name]: value,
+      };
+    });
+  }
+  ////////////////////////////////////////////////////////////////////////////////////
 
   ///SIGN IN
   const signInHandler = async (event) => {
@@ -48,32 +86,7 @@ const Header = () => {
     console.log(loggedUser);
     //console.log(JSON.stringify(loggedUser));
   };
-  //////////////////////////
-
-
-  /////USER SIGN IN FIELDS
-  function handleSignInFields(event) {
-    const { name, value } = event.target;
-    setSignIn((values) => {
-      return {
-        ...values,
-        [name]: value,
-      };
-    });
-  }
-  ////////////////////////////
-
-
-
-
-    const addUser = () => {
-        // console.log(name)
-        Axios.post('https://sql-connect.herokuapp.com/create',
-            { firstName: firstName, lastName: lastName, email:email, phone:phone,password:password }
-        ).then(() => {
-            console.log("success");
-        })
-    }
+  ////////////////////////////////////////////////////////////////////////////////////
 
     // open create account popup form
     const createForm = () => {
@@ -89,6 +102,7 @@ const Header = () => {
             }
           }
     }
+  ////////////////////////////////////////////////////////////////////////////////////    
     // open sign in popup form
     const signInForm = () => {
         var signInModal = document.getElementById("signInModal");
@@ -103,18 +117,23 @@ const Header = () => {
             }
           }
     }
+  ////////////////////////////////////////////////////////////////////////////////////
+
     // close sign in form and open create account form
     const closeSignIn = () => {
         var signInModal = document.getElementById("signInModal");
         signInModal.style.display = "none";
         createForm();
     }
+  ////////////////////////////////////////////////////////////////////////////////////
+
     // close create account form and open sign in form
     const closeCreateAccount = () => {
         var createModal = document.getElementById("createAccountModal");
         createModal.style.display = "none";
         signInForm();
     }
+  ////////////////////////////////////////////////////////////////////////////////////
     
     return <div>  
         <div className="HomePage">
@@ -122,14 +141,15 @@ const Header = () => {
             <div className="header">
                 <div className="header-bkgrnd"></div>
                 <div className='banner'></div> 
-                <div className="accountIcon">
+                
+                <div class="dropdown" >
+                    <div className="accountIcon">
                     <span class="material-icons">account_circle</span>
                 </div>
                 <div className="expandIcon">
                     <span class="material-icons">expand_more</span>
                 </div>
-                <div class="dropdown" >
-                    <button class="dropbtn">My Account</button>
+                    <button class="dropbtn">Hi, Sign In!</button>
                     <div class="dropdown-content">
                         <div className="signIn">
                             <button className="signInBtn" onClick={signInForm}>Sign In</button>
@@ -138,29 +158,27 @@ const Header = () => {
                             <div id="signInModal" class="modal">
                                 <div class="modal-content">
                                     <span class="close">&times;</span>            
-                                    <label>{loginStatus}</label>
                                     <label className="sign-in-label">Sign In</label>
-    <div>
-        <input
-          onChange={handleSignInFields}
-          type="text" 
-          name="email"
-          value={signfield.email}
-          className="form-control sign-in-email"
-          placeholder="Email"
-        ></input>
-      </div>
-      <div>
-        <input
-          onChange={handleSignInFields}
-          type="password"
-          name="password"
-          value={signfield.password}
-          className="form-control sign-in-passwrd"
-          placeholder="Password"
-        ></input>
-      </div>
-                                   
+                                    <div>
+                                        <input
+                                        onChange={handleSignInFields}
+                                        type="text" 
+                                        name="email"
+                                        value={signfield.email}
+                                        className="form-control sign-in-email"
+                                        placeholder="Email"
+                                        ></input>
+                                    </div>
+                                    <div>
+                                        <input
+                                        onChange={handleSignInFields}
+                                        type="password"
+                                        name="password"
+                                        value={signfield.password}
+                                        className="form-control sign-in-passwrd"
+                                        placeholder="Password"
+                                        ></input>
+                                    </div>
                                     <button className="sign-in-btn" onClick={signInHandler}>Sign In</button>
                                     <button className="create-acc-btn" onClick={closeSignIn}>Create Account</button>
                                 </div>
@@ -181,21 +199,38 @@ const Header = () => {
                                         <label className="cMssg2">If you already have an account </label>
                                         <button className="signInBtn" onClick={closeCreateAccount}>Sign In</button>
                                     </div>
-                                   
-                                    <input type="text" className="create-fname" placeholder = "First Name" onChange={(event) => { setFirstName(event.target.value); }} />
-                                    
-                                    <input type="text" className="create-lname" placeholder = "Last Name" onChange={(event) => { setLastName(event.target.value); }} />
-                                    
-                                    <input type="text" className="create-phone" placeholder = "Phone Number" onChange={(event) => { setPhone(event.target.value); }} />
-                                   
-                                    <input type="text" className="create-email" placeholder = "Email" onChange={(event) => { setEmail(event.target.value); }} />
-                               
-                                    <input type="password" className="create-passwd" placeholder = "Password" onChange={(event) => { setPassword(event.target.value); }} />
 
-                                    
-
-                                    <button className="createAccBtn" onClick={addUser}>Create Account</button>
-
+                                    <div>
+                                        <input
+                                        onChange={handleFormChange}
+                                        type="text" 
+                                        name="name"
+                                        value={form.name}
+                                        className="form-control create-fname"
+                                        placeholder="Name"
+                                        ></input>
+                                    </div>
+                                    <div>
+                                        <input
+                                        onChange={handleFormChange}
+                                        type="text" 
+                                        name="email"
+                                        value={form.email}
+                                        className="form-control create-email"
+                                        placeholder="E-mail"
+                                        ></input>
+                                    </div>
+                                    <div>
+                                        <input
+                                        onChange={handleFormChange}
+                                        type="password" 
+                                        name="password"
+                                        value={form.password}
+                                        className="form-control create-passwd"
+                                        placeholder="Password"
+                                        ></input>
+                                    </div>
+                                    <button className="createAccBtn" onClick={createUser}>Create Account</button>
                                 </div>
                             </div>
                         </div>
@@ -214,14 +249,7 @@ const Header = () => {
                     </button>
                 </Link>
 
-                <div className="search"> 
-                    <input type="text" placeholder="Search by Title, Author or ISBN"/>
-                    <div className="searchButton">
-                        <button>
-                            <span class="material-icons">search</span>
-                        </button>
-                    </div>
-                </div>
+                
             </div>
             <hr/>
         <Outlet /> 

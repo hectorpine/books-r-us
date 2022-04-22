@@ -4,6 +4,7 @@ import './css/Home.css'
 import axios from 'axios';
 
 
+
 ////This is needed to load all of the books and to load all of the cart items
 ///For more info please see " React hooks, useReducer()"
 const reducer = (state, action) => {
@@ -36,7 +37,7 @@ const Home = () =>{
 
   /////useState  hook used to compare and filter through matching strings
   ////within the book title or author name
-  const [searchKey] = useState('');
+  const [searchKey, setSearchKey] = useState('');
   /////////////////////////////////////////////////////////////////////
 
   /////useEffect() hook sends get request to load "products" array,
@@ -123,15 +124,23 @@ const Home = () =>{
   };
   ////////////////////////////////////
 
-
-  
-
-
-
     
     return <div> 
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
       <div className='homepage-bkg'></div>
+
+      <div className="search"> 
+
+                    <input type="text" placeholder="Search by Title or Author"
+                       onChange={(event) => {
+                        setSearchKey(event.target.value);}}
+                    />
+                    <div className="searchButton">
+                     {/**   <button>
+                            <span class="material-icons">search</span>
+                        </button> */}
+                    </div>
+                </div>
 
       <div class='filter-dropdown'>
 

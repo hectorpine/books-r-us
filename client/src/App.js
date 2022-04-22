@@ -680,6 +680,9 @@ function App() {
       </div>
       <button onClick={createUser}> Register Account</button>
       {/**REGISTER */}
+
+
+
       {/*SERACH BAR  */}
       <h3>SEARCH BAR</h3>
       <div className="search-bar">
@@ -692,6 +695,9 @@ function App() {
         />
       </div>
       {/*SERACH BAR  */}
+
+
+
 
       {/**NEW SALE ITEM FORM */}
       <div>

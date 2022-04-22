@@ -2,7 +2,7 @@
     position: relative;
     display:grid;
     grid-template-columns: auto auto auto auto;
-    margin: 280px 50px;
+    margin: 320px 50px;
     gap: 90px;
     z-index: 0;
    /* background-color: pink;*/
@@ -19,8 +19,35 @@
   z-index: 1;
 }*/
 
+.search input {
+  border: 1px outset black;
+  width: 650px;
+  height: 30px;
+  position: absolute;
+  font-size: medium;
+ 
+  padding-inline-start: 5px;
+  margin: 210px 25%;
+
+}
+::placeholder{
+  font-size: medium;
+}
+
+.searchButton button{
+  background-color: transparent;
+  border: 1px outset black;
+  width: 40px;
+  height: 34px;
+  position: absolute;
+  margin: 80px 977px;
+  cursor:pointer;
+}
+
+
+
 .filter-dropdown{
-  margin: 195px 1150px;
+  margin: 210px 80%;
   position: absolute;
   display: inline-block;
 }
