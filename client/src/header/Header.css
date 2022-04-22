@@ -1,5 +1,8 @@
 .header{
   position: fixed;
+  width: 100%;
+  height:auto;
+  z-index: 2;
 }
 
 .header-bkgrnd{
@@ -323,3 +326,5 @@ color: black;
 text-decoration: none;
 cursor: pointer;
 }
+
+

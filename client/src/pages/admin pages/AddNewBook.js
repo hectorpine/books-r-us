@@ -97,15 +97,6 @@ const AddNewBook = () =>{
                     className="form-control"
                 ></input>
 
-                <label>ISBN</label>
-                <input
-                    type="number"
-                    onChange={handleChange}
-                    name="reference"
-                    value={input.reference}
-                    className="form-control"
-                ></input>
-
                 <label>Genre</label>
                 <input
                     type="text"

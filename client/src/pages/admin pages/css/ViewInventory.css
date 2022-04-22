@@ -1,0 +1,92 @@
+.edit-book{
+    position: absolute;
+    margin-top: -320px;
+    margin-left: 210px;
+ }
+
+.bookImg label{
+    display: block;
+    height: 40px;
+    width: 130px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 17px;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: absolute;
+    margin: 510px 160px;
+    cursor: pointer;
+}
+
+ .edit-book-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 480px;
+ }
+
+ .edit-book-info input {
+    width: 600px;
+    height: 20px;
+    color: #202020;
+    font-size: medium;
+    padding-left: 3px;
+    border: .8px solid black;
+}
+
+.edit-book-info label{
+    padding-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #202020;
+}
+
+.edit-book-info textarea{
+    width:600px;
+    font-size: medium;
+    color: #202020;
+    padding-left: 3px;
+}
+
+.edit-book-info button.edit-book-btn {
+    height: 40px;
+    width: 155px;
+    font-size: 18px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: relative;
+    margin: 40px 230px;
+    cursor: pointer;
+}
+
+.books-to-edit{
+    position: absolute;
+    width: 400px;
+    margin: -225px 245px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+}
+
+.books-to-edit button.books-to-edit-btn{
+    padding-bottom: 25px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+.books-to-edit button.books-to-edit-btn:hover{
+    text-decoration: underline;
+}
+
+h7{
+    position: absolute;
+    margin: -280px 250px;
+    font-weight: 600;
+    font-size: 30px;
+}

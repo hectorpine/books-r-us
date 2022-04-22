@@ -126,49 +126,32 @@ const Home = () =>{
 
   
 
-/*
-  var modal = document.getElementById("qv-modal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("qv-btn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target === modal) {
-    modal.style.display = "none";
-  }
-}
-*/
-
-
 
 
     
     return <div> 
-        
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+      <div className='homepage-bkg'></div>
+
+      <div class='filter-dropdown'>
+
+        <button class='filter-search-btn'>
+          Filter Search
+          <span class="material-icons filter-expand">expand_more</span>
+        </button>
+
+         <div class='filter-btn-container'>
+           <button onClick={() => sortCheapItems(products)}>Price: Low to High</button>
+           <button onClick={() => sortExpensiveItems(products)}>Price: High to Low</button>
+           <button onClick={() => sortMostItems(products)}>In Stock</button>
+         </div>
+         
+      </div>
 
                   {/**INVENTORY PRODUCT DISPLAY */}
       <div>
         {/**SORTING BUTTONS */}
-        <button onClick={() => sortExpensiveItems(products)}>
-          {' '}
-          Sort by $$$
-        </button>
-        <button onClick={() => sortCheapItems(products)}> Sort by $</button>
-        <button onClick={() => sortMostItems(products)}> Highest Stock</button>
+        {/** */}
         <button onClick={() => sortLeastItems(products)}> Short Supply</button>
         <div className="homepage-book-container">
         {/**SORTING BUTTONS */}
@@ -196,7 +179,7 @@ window.onclick = function(event) {
               <div class="quick-view-bkgrnd"> </div> 
 
               
-              <button id="qv-btn" class="quick-view-btn">Quick View</button>
+              <button id="qv-btn" class="quick-view-btn" onClick="window.location.href='https://www.w3docs.com';">Quick View</button>
 
            
               <div id="qv-modal" class="quick-view-modal">

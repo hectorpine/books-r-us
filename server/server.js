@@ -5,6 +5,10 @@ import bookToMongoRouter from './mongoSchemaCreation.js';
 import Book from './bookInfoSchema.js';
 import cartToMongoRouter from './cartCreationRouter.js';
 import CartItem from './cartItemSchema.js';
+import User from './userAccountSchema.js';
+import expressAsyncHandler from 'express-async-handler';
+import { generateToken } from './token.js';
+import userRoute from './userRoute.js';
 
 dotenv.config();
 mongoose
@@ -28,6 +32,38 @@ app.use(express.urlencoded({ extended: true }));
 const inventoryRouter = express.Router();
 console.log('Should be api/books request');
 //app.use('/api/books',inventoryRouter);
+const signInRouter = express.Router();
+//app.use('/api/users', userRoute);
+
+app.use(
+  '/api/users/signin',
+  signInRouter.post(
+    '/',
+    expressAsyncHandler(async (req, res) => {
+      const email = req.body.email;
+      const password = req.body.password;
+      //json=true;
+      const dbUser = await User.findOne({ email: email });
+      console.log(dbUser);
+      if (dbUser) {
+        if (password == dbUser.password) {
+          const userAccount = {};
+          res.send({
+            _id: dbUser._id,
+            name: dbUser.name,
+            email: dbUser.email,
+            isAdmin: dbUser.isAdmin,
+            // token: generateToken(dbUser),
+          });
+          console.log('in server.js');
+          return;
+        }
+      }
+      //res.status(401).send({ message: 'Invalid email or password' });
+    })
+  )
+);
+
 ////GET REQUESTS
 app.use(
   '/api/books',
@@ -46,6 +82,31 @@ app.use(
 );
 
 ////POST REQUEST
+
+////create account
+const userRouter = express.Router();
+app.use(
+  '/api/users/newaccount',
+  userRouter.post('/', async (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    const password = req.body.password;
+    const isAdmin = false;
+
+    const newUser = new User({
+      name,
+      email,
+      password,
+      isAdmin,
+    });
+    newUser.save();
+  })
+);
+
+//app.use(express.json());
+//app.use(express.urlencoded({ extended: true }));
+
+////create book
 app.use(
   '/api/books',
   inventoryRouter.post('/', async (req, res) => {
@@ -109,8 +170,20 @@ app.use(
     //const updatedQuant = Number(req.body.newQuant);
     const id = req.body._id;
     const edited = await CartItem.findByIdAndUpdate(id, req.body);
-    res.send({quantity: edited.quantity});
-    
+    res.send({ quantity: edited.quantity });
+  })
+);
+
+const updateBookRouter = express.Router();
+app.use(
+  '/api/books/edititems',
+  updateBookRouter.put('/', async (req, res) => {
+    const title = req.body.title;
+    const id = req.body._id;
+    console.log(title, id);
+    const changed = await Book.findByIdAndUpdate(id, req.body);
+    res.send(changed);
+    console.log(changed);
   })
 );
 

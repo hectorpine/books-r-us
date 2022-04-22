@@ -4,6 +4,7 @@ import '../pages/font.css'
 import { useState } from "react";
 import Axios from 'axios';
 import { Outlet, Link } from "react-router-dom";
+import axios from 'axios';
 
 const Header = () => {
 
@@ -14,22 +15,57 @@ const Header = () => {
     const [password,setPassword] = useState("");
     const [loginStatus, setLoginStatus] = useState("");
 
-    const logIn = () => {
-        // console.log(name)
-        Axios.post('https://sql-connect.herokuapp.com/login',
-            { email:email, password:password}
-        ).then((response) => {
-           // console.log(response.data);
-            if (response.data.message){
-                setLoginStatus(response.data.message)
-            }
-            else{
-               // setLoginStatus(response.data[0]);
-                setLoginStatus("You are logged in !");
-                ////ALLOW TO LOGIN TO NEXT PAGE
-            }
-        });
+
+    
+  ///hook for SIGN IN form functionality
+  const [signfield, setSignIn] = useState({
+    email: '',
+    password: '',
+  });
+  ///////////////////////////////////////////////////
+
+
+  ///SIGN IN
+  const signInHandler = async (event) => {
+    event.preventDefault();
+
+    const email = signfield.email;
+    const password = signfield.password;
+    //const {loggedUser} = {_id:'' ,email:'',name:'',isAdmin:''}
+
+    const user = {
+      email: signfield.email,
+      password: signfield.password,
     };
+
+    const { data } = await axios.post('/api/users/signin', {
+      email,
+      password,
+    });
+
+    console.log('printed data', data);
+    const loggedUser = data;
+    console.log(loggedUser);
+    //console.log(JSON.stringify(loggedUser));
+  };
+  //////////////////////////
+
+
+  /////USER SIGN IN FIELDS
+  function handleSignInFields(event) {
+    const { name, value } = event.target;
+    setSignIn((values) => {
+      return {
+        ...values,
+        [name]: value,
+      };
+    });
+  }
+  ////////////////////////////
+
+
+
+
     const addUser = () => {
         // console.log(name)
         Axios.post('https://sql-connect.herokuapp.com/create',
@@ -104,13 +140,31 @@ const Header = () => {
                                     <span class="close">&times;</span>            
                                     <label>{loginStatus}</label>
                                     <label className="sign-in-label">Sign In</label>
-                                    <input type="text" className = "sign-in-email" placeholder = "Email" onChange={(event) => { setEmail(event.target.value); }}/>
-                                    <input type="password" className = "sign-in-passwrd" placeholder = "Password" onChange={(event) => { setPassword(event.target.value); }}/>
-                                    <button className="sign-in-btn" onClick={logIn}>Sign In</button>
+    <div>
+        <input
+          onChange={handleSignInFields}
+          type="text" 
+          name="email"
+          value={signfield.email}
+          className="form-control sign-in-email"
+          placeholder="Email"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={handleSignInFields}
+          type="password"
+          name="password"
+          value={signfield.password}
+          className="form-control sign-in-passwrd"
+          placeholder="Password"
+        ></input>
+      </div>
+                                   
+                                    <button className="sign-in-btn" onClick={signInHandler}>Sign In</button>
                                     <button className="create-acc-btn" onClick={closeSignIn}>Create Account</button>
                                 </div>
                             </div>
-
 
                         </div>
                         <div className="createAccount">

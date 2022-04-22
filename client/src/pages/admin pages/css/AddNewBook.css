@@ -60,10 +60,9 @@
  .bookInfo {
     display: flex;
     flex-direction: column;
- 
     margin-left: 480px;
-
  }
+ 
 .bookInfo input {
     width: 600px;
     height: 20px;

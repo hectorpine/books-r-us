@@ -7,6 +7,72 @@
     z-index: 0;
    /* background-color: pink;*/
 }
+/*
+.homepage-bkg{
+  background-color: pink;
+  width:100%;
+  height: 188px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}*/
+
+.filter-dropdown{
+  margin: 195px 1150px;
+  position: absolute;
+  display: inline-block;
+}
+
+.filter-dropdown button.filter-search-btn{
+  position: absolute;
+  width: 130px;
+  height: 30px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 15px;
+  text-align: left;
+  padding-left: 10px;
+  font-weight:600;
+  font-size: 14px;
+}
+
+.filter-expand{
+  position: absolute;
+  margin: -3px 0;
+  align-content:flex-end;
+}
+
+
+.filter-btn-container{
+  width: 130px;
+  height:100px;
+  margin: 32px 0;
+  border: 1px solid black;
+  border-radius: 15px;
+  background-color: white;
+  position: absolute;
+  display: none;
+  z-index: 1;
+}
+
+.filter-dropdown:hover .filter-btn-container{
+  display: block;
+}
+
+.filter-btn-container button{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding-top: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.filter-btn-container button:hover{
+  text-decoration: underline;
+}
 
 .display-books{
     width: 250px;
@@ -45,7 +111,7 @@
     border: none;
     color: white;
     font-size: 18px;
-    margin: 20px 45px;
+    margin: 20px 50px;
     position: absolute;
     z-index: -2;
     cursor: pointer;

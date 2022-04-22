@@ -9,8 +9,12 @@ const reducer = (state, action) => {
     case 'PULL_INVENTORY':
       return { ...state, products: action.payload, loading: false };
     case 'RETRIEVE_CART':
-      console.log('reducer()');
+      // console.log('reducer()');
       return { ...state, inCart: action.payload, loading: false };
+    case 'PULL_USERS':
+      return { ...state, userList: action.payload, loading: false };
+    case 'PULL_ORDERS':
+      return { ...state, totalOrders: action.payload, loading: false };
     default:
       return state;
   }
@@ -22,10 +26,15 @@ function App() {
   // these arrays are declared from an empty state, when the reducer function is
   //dispatched, an axios request is made to an express router in order to retrieve
   //the list of "product" objects as an array.
-  const [{ products, inCart }, dispatch] = useReducer(reducer, {
-    products: [],
-    inCart: [],
-  });
+  const [{ products, inCart, userList, totalOrders }, dispatch] = useReducer(
+    reducer,
+    {
+      products: [],
+      inCart: [],
+      userList: [],
+      totalOrders: [],
+    }
+  );
   ////////////////////////////////////////////////////////////////////////////
 
   /////useState  hook used to compare and filter through matching strings
@@ -42,12 +51,12 @@ function App() {
     };
     const fetchCart = async () => {
       const mongoCart = await axios.get('/api/cartitems');
-      console.log(mongoCart.data);
+      // console.log(mongoCart.data);
       dispatch({ type: 'RETRIEVE_CART', payload: mongoCart.data });
     };
 
     fetchData();
-    console.log('fetchCart()');
+    //  console.log('fetchCart()');
     fetchCart();
   }, []);
   //////////////////////////////////////////////////////////
@@ -57,12 +66,37 @@ function App() {
   useEffect(() => {
     const fetchCart = async () => {
       const mongoCart = await axios.get('/api/cartitems');
-      console.log(mongoCart.data);
+      // console.log(mongoCart.data);
       dispatch({ type: 'RETRIEVE_CART', payload: mongoCart.data });
     };
     fetchCart();
-  });
+  }); //////ADD BRACKETS FOR CART FUNCTION
   /////////////////////////////////////////////////////////
+
+  //ADMIN USER ACCOUNT CHANGES useEffect() hook needed to load all users
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const list = await axios.get('/api/users/pull');
+      // console.log(mongoCart.data);
+      dispatch({ type: 'PULL_USERS', payload: list.data });
+    };
+    fetchUsers();
+  }, []);
+
+  //////////////////////////////////////////////////////////////////
+
+  //Admin TOTAL ORDERS useEffect() hook needed to pull all orders from database
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const allOrders = await axios.get('/api/orders/requestall');
+      dispatch({ type: 'PULL_ORDERS', payload: allOrders.data });
+    };
+    fetchOrders();
+    // console.log(totalOrders.items);
+  }, []);
+
+  /////////////////////////////////////////////////////////////////////////////
 
   ////useState() hook used to create and "input" object that
   ///includes all of the needed fields to create new book item
@@ -77,6 +111,44 @@ function App() {
     description: '',
   });
   ///////////////////////////////////////////////////////////
+
+  ///hook used to get information from user input fields
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
+  ///////////////////////////////////////////////////
+
+  ///hook for SIGN IN form functionality
+  const [signfield, setSignIn] = useState({
+    email: '',
+    password: '',
+  });
+  ///////////////////////////////////////////////////
+
+  ////hook for EDIT ITEMS
+  const [editedBook, setEdit] = useState({
+    _id: '',
+    titleEdit: '',
+    authorEdit: '',
+    genreEdit: '',
+    priceEdit: '',
+    stockEdit: '',
+    descriptionEdit: '',
+  });
+  ///////////////////////////////////////////
+
+  /// hook for EDITING USER ACCOUNTS
+
+  const [editAccount, setAccount] = useState({
+    _id: '',
+    nameEdit: '',
+    emailEdit: '',
+    isAdminEdit: '',
+  });
+
+  /////////////////////////////////
 
   ////handleChange() is the handler used to manage changing
   ///text input within each field of the "New Sale Item" form
@@ -194,25 +266,224 @@ function App() {
     ? parseFloat(cartTotal.toFixed(2)) * 0.8
     : parseFloat(cartTotal.toFixed(2));
   ////////////////////////////////////////////////////////
+
+  ///NEW USER CREATION HANDLER
+  function createUser(event) {
+    event.preventDefault();
+    const newUser = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+    };
+    console.log(newUser);
+    axios.post('/api/users/newaccount', newUser);
+  }
+  //////////////////////////
+
+  /// user registration form field changes
+  function handleFormChange(event) {
+    const { name, value } = event.target;
+    setForm((prevForm) => {
+      return {
+        ...prevForm,
+        [name]: value,
+      };
+    });
+  }
+  ////////////////////////////
+
+  /////USER SIGN IN FIELDS
+  function handleSignInFields(event) {
+    const { name, value } = event.target;
+    setSignIn((values) => {
+      return {
+        ...values,
+        [name]: value,
+      };
+    });
+  }
+  ////////////////////////////
+
+  ///SIGN IN
+  const signInHandler = async (event) => {
+    event.preventDefault();
+
+    const email = signfield.email;
+    const password = signfield.password;
+    //const {loggedUser} = {_id:'' ,email:'',name:'',isAdmin:''}
+
+    const user = {
+      email: signfield.email,
+      password: signfield.password,
+    };
+
+    const { data } = await axios.post('/api/users/signin', {
+      email,
+      password,
+    });
+
+    console.log('printed data', data);
+    const loggedUser = data;
+    console.log(loggedUser);
+    //console.log(JSON.stringify(loggedUser));
+  };
+  //////////////////////////
+
+  /////ITEM EDITING MENU OPTIONS
+  function itemToEdit(product) {
+    // const { name, value } = product.target;
+    setEdit(() => {
+      return {
+        _id: product._id,
+        titleEdit: product.title,
+        authorEdit: product.author,
+        genreEdit: product.genre,
+        priceEdit: product.price,
+        stockEdit: product.stock,
+        descriptionEdit: product.description,
+      };
+    });
+  }
+
+  /////////////////////////////
+
+  /////Submit change for item
+  function pushItemChange(product, event) {
+    event.preventDefault();
+
+    const id = editedBook._id;
+    const newTitle = editedBook.titleEdit;
+    const newAuthor = editedBook.authorEdit;
+    const newGenre = editedBook.genreEdit;
+    const newPrice = editedBook.priceEdit;
+    const newStock = editedBook.stockEdit;
+    const newDesc = editedBook.descriptionEdit;
+
+    axios.put('/api/books/edititems', {
+      _id: id,
+      title: newTitle,
+      author: newAuthor,
+      genre: newGenre,
+      price: newPrice,
+      stock: newStock,
+      description: newDesc,
+    });
+
+    // console.log(editedBook);
+  }
+  /////////////////////////////
+
+  ////EDIT FIELD CHANGE
+  function editFieldChange(event) {
+    const { name, value } = event.target;
+    setEdit((prevInput) => {
+      return {
+        ...prevInput,
+        [name]: value,
+      };
+    });
+  }
+
+  /////
+
+  ///EDIT USER ACCOUNT FIELD CHANGE
+  function userFieldChange(event) {
+    const { name, value } = event.target;
+    setAccount((prevInput) => {
+      return {
+        ...prevInput,
+        [name]: value,
+      };
+    });
+  }
+
+  /////////////////////////////////
+  //USER ACCOUNT EDIT filed population
+  function accountToEdit(account) {
+    setAccount(() => {
+      return {
+        _id: account._id,
+        nameEdit: account.name,
+        emailEdit: account.email,
+        isAdminEdit: account.isAdmin,
+      };
+    });
+  }
+
+  /////////////////////////////////////////////////
+
+  /////Submit change for item
+  function pushAccountChange(product, event) {
+    event.preventDefault();
+
+    const id = editAccount._id;
+    const newName = editAccount.nameEdit;
+    const newEmail = editAccount.emailEdit;
+    const adminStatus = editAccount.isAdminEdit;
+    console.log(adminStatus);
+
+    axios.put('/api/users/editaccounts', {
+      _id: id,
+      name: newName,
+      email: newEmail,
+      isAdmin: adminStatus,
+    });
+
+    // console.log(editedBook);
+  }
+  /////////////////////////////
+
+  //deleteAccount handler
+  function deleteAccountHandler(account, event) {
+    const id = account._id;
+    axios.delete(`/api/users/deleteaccount/${id}`);
+  }
+  ////////////////////////////
+  function placeOrderHandler(event) {
+    const currentCart = inCart;
+    const orderItems = { items: currentCart };
+
+    axios.post('/api/orders/neworder', orderItems);
+  }
+
+  //////
+
+  ///print info
+  function printInfo() {
+    console.log(inCart);
+    console.log(totalOrders);
+  }
+  //////////////////////
   return (
     <div>
       {/**Header Buttons, no functionality */}
-      <a href="/">HomeLink</a>
-      <a href="/cart">Cart</a>
       <a href="/profile">Signin/User</a>
       {/**Header Buttons, no functionality */}
-      {/*SERACH BAR  */}
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Find your next adventure..."
-          onChange={(event) => {
-            setSearchKey(event.target.value);
-          }}
-        />
+      {/**Display Orders */}
+      <h3>Orders</h3>
+      <button onClick={() => printInfo()}>PRINT</button>
+      <div>
+        {''}
+        {totalOrders.map((order) => (
+          <div key={order._id} sm={6} md={4} lg={3} className="mb-3">
+            <div>
+              Order: {order._id}
+              <div>
+                {order.items.map((item)=>(
+                  <div key={item._id} sm={6} md={4} lg={3} className="mb-3">
+                    Item: {item.title} Qty: {item.quantity} Price: ${item.price}
+                  </div>
+                ))}
+              </div>
+              -----------------------------------------------
+            </div>
+          </div>
+        ))}
+        {''}
       </div>
-      {/*SERACH BAR  */}
+      {/**Display Orders */}
       {/**CART DISPLAY */}
+      <h3>Cart</h3>
       <div>
         {inCart.map((product) => (
           <div key={product.itemId} className="mb-3">
@@ -231,7 +502,197 @@ function App() {
       <div>
         <text>Order Total : ${cartTotal}</text>
       </div>
+      <button onClick={(event) => placeOrderHandler(event)}>Place Order</button>
       {/**CART DISPLAY */}
+      {/*Edit User */}
+      <h3>Admin User Account Changes</h3>
+      <div>
+        {userList.map((account) => (
+          <div key={account._id} sm={6} md={4} lg={3} className="mb-3">
+            <div>
+              Name: {account.name} || Email: {account.email} || Admin Status:
+              {account.isAdmin ? 'true' : 'false'}
+              {'  '}
+              <button onClick={() => accountToEdit(account)}> Edit User</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <input
+          onChange={userFieldChange}
+          name="nameEdit"
+          value={editAccount.nameEdit}
+          className="form-control"
+          placeholder="Name"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={userFieldChange}
+          name="emailEdit"
+          value={editAccount.emailEdit}
+          className="form-control"
+          placeholder="Email"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={userFieldChange}
+          name="isAdminEdit"
+          value={editAccount.isAdminEdit}
+          className="form-control"
+          placeholder="Admin Status"
+        ></input>
+      </div>
+      <button onClick={(event) => pushAccountChange(editAccount, event)}>
+        Submit Change
+      </button>
+      <button onClick={(event) => deleteAccountHandler(editAccount, event)}>
+        {' '}
+        Delete
+      </button>
+      {/*Edit User */}
+      {/**Edit items */}
+      <h3>EDIT ITEMS</h3>
+      <div>
+        {products.map((product) => (
+          <div key={product._id} sm={6} md={4} lg={3} className="mb-3">
+            <div>
+              {product.title} by {product.author} - ${product.price}- Stock:{' '}
+              {product.stock} - Genre: {product.genre} -
+              <button onClick={() => itemToEdit(product)}> Edit Item</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <h4>Item to Edit</h4>
+      <div>
+        <input
+          onChange={editFieldChange}
+          name="titleEdit"
+          value={editedBook.titleEdit}
+          className="form-control"
+          placeholder="Book title"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={editFieldChange}
+          name="authorEdit"
+          value={editedBook.authorEdit}
+          className="form-control"
+          placeholder="Book author"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={editFieldChange}
+          name="genreEdit"
+          value={editedBook.genreEdit}
+          className="form-control"
+          placeholder="Book genre"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={editFieldChange}
+          name="priceEdit"
+          value={editedBook.priceEdit}
+          className="form-control"
+          placeholder="Book price"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={editFieldChange}
+          name="stockEdit"
+          value={editedBook.stockEdit}
+          className="form-control"
+          placeholder="Book Stock"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={editFieldChange}
+          name="descriptionEdit"
+          value={editedBook.descriptionEdit}
+          className="form-control"
+          placeholder="Book description"
+        ></input>
+      </div>
+      <button onClick={(event) => pushItemChange(editedBook, event)}>
+        {' '}
+        Submit Change
+      </button>
+
+      {/**Edit items */}
+      {/**SIGN IN*/}
+      <h3>Sign In</h3>
+      <div>
+        <input
+          onChange={handleSignInFields}
+          name="email"
+          value={signfield.email}
+          className="form-control"
+          placeholder="Enter username"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={handleSignInFields}
+          name="password"
+          value={signfield.password}
+          className="form-control"
+          placeholder="Password"
+        ></input>
+      </div>
+      <button onClick={signInHandler}> SignIn</button>
+      {/**SIGN IN*/}
+      {/**REGISTER */}
+      <div>
+        <h3>Regist New User</h3>
+        <input
+          onChange={handleFormChange}
+          name="name"
+          value={form.name}
+          className="form-control"
+          placeholder="Enter username"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={handleFormChange}
+          name="email"
+          value={form.email}
+          className="form-control"
+          placeholder="Enter email"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={handleFormChange}
+          name="password"
+          value={form.password}
+          className="form-control"
+          placeholder="enter password"
+        ></input>
+      </div>
+      <button onClick={createUser}> Register Account</button>
+      {/**REGISTER */}
+      {/*SERACH BAR  */}
+      <h3>SEARCH BAR</h3>
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Find your next adventure..."
+          onChange={(event) => {
+            setSearchKey(event.target.value);
+          }}
+        />
+      </div>
+      {/*SERACH BAR  */}
+
       {/**NEW SALE ITEM FORM */}
       <div>
         <div>
