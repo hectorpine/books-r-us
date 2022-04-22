@@ -9,6 +9,8 @@ import User from './userAccountSchema.js';
 import expressAsyncHandler from 'express-async-handler';
 import { generateToken } from './token.js';
 import userRoute from './userRoute.js';
+import orderToMongoRouter from './ordersCreationRouter.js';
+import Order from './orderSchema.js';
 
 dotenv.config();
 mongoose
@@ -25,6 +27,7 @@ const app = express();
 ///book inventory seed
 app.use('/api/seed', bookToMongoRouter);
 app.use('/api/cartseed', cartToMongoRouter);
+app.use('/api/orderseed', orderToMongoRouter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -81,7 +84,38 @@ app.use(
   })
 );
 
+const userPullRouter = express.Router();
+app.use(
+  '/api/users/pull',
+  userPullRouter.get('/', async (req, res) => {
+    const totalUsers = await User.find();
+    res.send(totalUsers);
+  })
+);
+
+const allOrdersRouter = express.Router();
+
+app.use(
+  '/api/orders/requestall',
+  allOrdersRouter.get('/', async (req, res) => {
+    const orders = await Order.find();
+    res.send(orders);
+    //console.log(orders);
+  })
+);
+
 ////POST REQUEST
+///create order
+
+const newOrderRouter = express.Router();
+app.use(
+  '/api/orders/neworder',
+  newOrderRouter.post('/', async (req, res) => {
+    const items = req.body.items;
+    const recentOrder = new Order({ items });
+    recentOrder.save();
+  })
+);
 
 ////create account
 const userRouter = express.Router();
@@ -163,6 +197,18 @@ app.use(
   })
 );
 
+const removeUserRouter = express.Router();
+app.use(
+  '/api/users/deleteaccount',
+  removeUserRouter.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    await User.findByIdAndRemove(id).exec();
+    res.send('removed from cart');
+
+    //removable.delete();
+  })
+);
+
 /////PUT request
 app.use(
   '/api/cartitems/increase',
@@ -184,6 +230,16 @@ app.use(
     const changed = await Book.findByIdAndUpdate(id, req.body);
     res.send(changed);
     console.log(changed);
+  })
+);
+
+///update Account
+const updateAccountRouter = express.Router();
+app.use(
+  '/api/users/editaccounts',
+  updateAccountRouter.put('/', async (req, res) => {
+    const id = req.body._id;
+    const update = await User.findByIdAndUpdate(id, req.body);
   })
 );
 
