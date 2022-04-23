@@ -149,6 +149,16 @@ function App() {
   });
 
   /////////////////////////////////
+  const [onlineUser, setUser] = useState({
+    email: '',
+    isAdmin: '',
+    name: '',
+    _id: '',
+  });
+
+  ///SignedIn User
+
+  ////////////////////////////////////
 
   ////handleChange() is the handler used to manage changing
   ///text input within each field of the "New Sale Item" form
@@ -303,6 +313,8 @@ function App() {
     });
   }
   ////////////////////////////
+
+  
 
   ///SIGN IN
   const signInHandler = async (event) => {
@@ -459,6 +471,59 @@ function App() {
       {/**Header Buttons, no functionality */}
       <a href="/profile">Signin/User</a>
       {/**Header Buttons, no functionality */}
+      {/**SIGN IN*/}
+      <h3>Sign In</h3>
+      <div>
+        <input
+          onChange={handleSignInFields}
+          name="email"
+          value={signfield.email}
+          className="form-control"
+          placeholder="Enter username"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={handleSignInFields}
+          name="password"
+          value={signfield.password}
+          className="form-control"
+          placeholder="Password"
+        ></input>
+      </div>
+      <button onClick={signInHandler}> SignIn</button>
+      {/**SIGN IN*/}
+      {/**REGISTER */}
+      <div>
+        <h3>Regist New User</h3>
+        <input
+          onChange={handleFormChange}
+          name="name"
+          value={form.name}
+          className="form-control"
+          placeholder="Enter username"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={handleFormChange}
+          name="email"
+          value={form.email}
+          className="form-control"
+          placeholder="Enter email"
+        ></input>
+      </div>
+      <div>
+        <input
+          onChange={handleFormChange}
+          name="password"
+          value={form.password}
+          className="form-control"
+          placeholder="enter password"
+        ></input>
+      </div>
+      <button onClick={createUser}> Register Account</button>
+      {/**REGISTER */}
       {/**Display Orders */}
       <h3>Orders</h3>
       <button onClick={() => printInfo()}>PRINT</button>
@@ -469,7 +534,7 @@ function App() {
             <div>
               Order: {order._id}
               <div>
-                {order.items.map((item)=>(
+                {order.items.map((item) => (
                   <div key={item._id} sm={6} md={4} lg={3} className="mb-3">
                     Item: {item.title} Qty: {item.quantity} Price: ${item.price}
                   </div>
@@ -627,61 +692,6 @@ function App() {
       </button>
 
       {/**Edit items */}
-      {/**SIGN IN*/}
-      <h3>Sign In</h3>
-      <div>
-        <input
-          onChange={handleSignInFields}
-          name="email"
-          value={signfield.email}
-          className="form-control"
-          placeholder="Enter username"
-        ></input>
-      </div>
-      <div>
-        <input
-          onChange={handleSignInFields}
-          name="password"
-          value={signfield.password}
-          className="form-control"
-          placeholder="Password"
-        ></input>
-      </div>
-      <button onClick={signInHandler}> SignIn</button>
-      {/**SIGN IN*/}
-      {/**REGISTER */}
-      <div>
-        <h3>Regist New User</h3>
-        <input
-          onChange={handleFormChange}
-          name="name"
-          value={form.name}
-          className="form-control"
-          placeholder="Enter username"
-        ></input>
-      </div>
-      <div>
-        <input
-          onChange={handleFormChange}
-          name="email"
-          value={form.email}
-          className="form-control"
-          placeholder="Enter email"
-        ></input>
-      </div>
-      <div>
-        <input
-          onChange={handleFormChange}
-          name="password"
-          value={form.password}
-          className="form-control"
-          placeholder="enter password"
-        ></input>
-      </div>
-      <button onClick={createUser}> Register Account</button>
-      {/**REGISTER */}
-
-
 
       {/*SERACH BAR  */}
       <h3>SEARCH BAR</h3>
@@ -695,9 +705,6 @@ function App() {
         />
       </div>
       {/*SERACH BAR  */}
-
-
-
 
       {/**NEW SALE ITEM FORM */}
       <div>

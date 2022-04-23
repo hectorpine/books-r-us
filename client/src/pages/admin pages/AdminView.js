@@ -22,6 +22,7 @@ for (var i = 0; i < btns.length; i++) {
 */
     return <div> 
         <div className="header2"> 
+            <div className="admin-header-bkg"></div>
             <h2>Admin View</h2>
             <button className="signoutBtn" onClick={signOut}>Sign Out</button>
             <div className="hl"></div>
@@ -29,7 +30,7 @@ for (var i = 0; i < btns.length; i++) {
         
         <div className="AdminSidebar">
             <div className="vl"></div>
-            <div id="sidebarLinks">
+            <div id="sidebarLinks" className="admin-sidebar-nav">
                 <Link to="/admin">
                     <button class="adminBtn adminAddBtn">Add New Book</button>
                 </Link> <br/>

@@ -4,21 +4,6 @@
     margin-left: 210px;
  }
 
-.bookImg label{
-    display: block;
-    height: 40px;
-    width: 130px;
-    text-align: center;
-    line-height: 40px;
-    font-size: 17px;
-    color: white;
-    background-color: #19394A;
-    border-radius: 10px;
-    position: absolute;
-    margin: 510px 160px;
-    cursor: pointer;
-}
-
  .edit-book-info {
     display: flex;
     flex-direction: column;
@@ -62,6 +47,8 @@
 }
 
 .books-to-edit{
+    border: 1px solid black;
+    height: 1000px;
     position: absolute;
     width: 400px;
     margin: -225px 245px;
@@ -78,6 +65,7 @@
     text-align: left;
     font-size: 18px;
     font-weight: 300;
+ 
 }
 
 .books-to-edit button.books-to-edit-btn:hover{

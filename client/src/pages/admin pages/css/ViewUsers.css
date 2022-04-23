@@ -1,0 +1,71 @@
+.edit-user{
+    position: absolute;
+    margin-top: -280px;
+ 
+    display: flex;
+    flex-direction: column;
+    margin-left: 680px;
+ }
+
+ .edit-user input {
+    width: 600px;
+    height: 20px;
+    color: #202020;
+    font-size: medium;
+    padding-left: 3px;
+    border: .8px solid black;
+}
+
+ .edit-user label{
+    padding-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #202020;
+}
+
+.users{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    position: absolute;
+    margin: -230px 250px;
+}
+
+.users button.user-to-edit{
+    text-align: left;
+    font-size: 18px;
+    font-weight: 300;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding-bottom: 20px;
+}
+
+.users button.user-to-edit:hover{
+    text-decoration: underline;
+}
+
+.edit-user button{
+    height: 40px;
+    width: 155px;
+    font-size: 18px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.edit-user-btns{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.user-change-btn{
+    margin-left: 80px;
+}
+.user-delete-btn{
+    margin-left: 90px;
+}
