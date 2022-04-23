@@ -111,8 +111,13 @@ const newOrderRouter = express.Router();
 app.use(
   '/api/orders/neworder',
   newOrderRouter.post('/', async (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    const date = req.body.date;
     const items = req.body.items;
-    const recentOrder = new Order({ items });
+    const total = req.body.total;
+
+    const recentOrder = new Order({ name, email, date, total, items });
     recentOrder.save();
   })
 );

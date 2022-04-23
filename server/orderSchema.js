@@ -2,7 +2,11 @@ import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema(
   {
-    items: {type: Array, required: true},
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    date: { type: Date, required: true },
+    total: { type: Number, required: true },
+    items: { type: Array, required: true },
   },
   {
     timestamps: true,

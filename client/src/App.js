@@ -257,6 +257,39 @@ function App() {
   };
   ////////////////////////////////////
 
+  ///admin ORDERS
+  const adminSortName = (totalOrders) => {
+    function highToLowPrice(a, b) {
+      console.log(a.total, b.total);
+      return a.name.localeCompare(b.name);
+    }
+    console.log(totalOrders);
+    totalOrders.sort(highToLowPrice);
+    console.log(totalOrders);
+  };
+
+  const adminSortDate = (totalOrders) => {
+    function dateOrder(a, b) {
+      return new Date(a.date) - new Date(b.date);
+    }
+    totalOrders.sort(dateOrder);
+  };
+
+  const adminSortExpensive = (totalOrders) => {
+    function highToLowPrice(a, b) {
+      return b.total - a.total;
+    }
+    totalOrders.sort(highToLowPrice);
+  };
+
+  const adminSortCheap = (totalOrders) => {
+    function lowToHighPrice(a, b) {
+      return a.total - b.total;
+    }
+    totalOrders.sort(lowToHighPrice);
+  };
+  ////////////////////////////////////
+
   ///uses .reduce() function to return
   ///total price of items including tax
   let { cartTotal } = inCart.reduce(
@@ -315,8 +348,6 @@ function App() {
   }
   ////////////////////////////
 
-  
-
   ///SIGN IN
   const signInHandler = async (event) => {
     event.preventDefault();
@@ -338,6 +369,8 @@ function App() {
     console.log('printed data', data);
     const loggedUser = data;
     console.log(loggedUser);
+    localStorage.setItem('user', JSON.stringify(loggedUser));
+    console.log('this local', JSON.parse(localStorage.getItem('user')));
     //console.log(JSON.stringify(loggedUser));
   };
   //////////////////////////
@@ -454,7 +487,17 @@ function App() {
   ////////////////////////////
   function placeOrderHandler(event) {
     const currentCart = inCart;
-    const orderItems = { items: currentCart };
+    const today = new Date().toLocaleDateString('en-US');
+    const custEmail = loggedOn.email;
+    const custName = loggedOn.name;
+    const total = cartTotal;
+    const orderItems = {
+      name: custName,
+      email: custEmail,
+      date: today,
+      items: currentCart,
+      total: total,
+    };
 
     axios.post('/api/orders/neworder', orderItems);
   }
@@ -463,14 +506,20 @@ function App() {
 
   ///print info
   function printInfo() {
-    console.log(inCart);
-    console.log(totalOrders);
+    const date = new Date().toLocaleDateString('en-US');
+    console.log(date);
+    //console.log(inCart);
+    // console.log(totalOrders);
   }
   //////////////////////
+
+  ////
+
+  const loggedOn = JSON.parse(localStorage.getItem('user'));
   return (
     <div>
       {/**Header Buttons, no functionality */}
-      <a href="/profile">Signin/User</a>
+      <a href="/profile">{loggedOn ? <text>On</text> : <text>Off</text>}</a>
       {/**Header Buttons, no functionality */}
       {/**SIGN IN*/}
       <h3>Sign In</h3>
@@ -527,13 +576,22 @@ function App() {
       {/**REGISTER */}
       {/**Display Orders */}
       <h3>Orders</h3>
-      <button onClick={() => printInfo()}>PRINT</button>
+      <button onClick={() => adminSortName(totalOrders)}>SortByName</button>
+      <button onClick={() => adminSortDate(totalOrders)}>SortByDate</button>
+      <button onClick={() => adminSortExpensive(totalOrders)}>
+        SortByExpensive
+      </button>
+      <button onClick={() => adminSortCheap(totalOrders)}>SortByCheap</button>
       <div>
         {''}
         {totalOrders.map((order) => (
           <div key={order._id} sm={6} md={4} lg={3} className="mb-3">
             <div>
               Order: {order._id}
+              <div>
+                Name:{order.name} --- Email: {order.email} ---Date:{order.date}{' '}
+                Total:{order.total}
+              </div>
               <div>
                 {order.items.map((item) => (
                   <div key={item._id} sm={6} md={4} lg={3} className="mb-3">
