@@ -146,6 +146,7 @@ const ViewInventory = () =>{
     });
 
     // console.log(editedBook);
+    window.location.reload();
   }
   /////////////////////////////
 
