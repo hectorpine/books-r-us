@@ -16,6 +16,8 @@ const reducer = (state, action) => {
       return { ...state, userList: action.payload, loading: false };
     case 'PULL_ORDERS':
       return { ...state, totalOrders: action.payload, loading: false };
+    case 'ALL_DISCOUNTS':
+      return { ...state, allDiscounts: action.payload, loading: false };
     default:
       return state;
   }
@@ -27,15 +29,14 @@ function App() {
   // these arrays are declared from an empty state, when the reducer function is
   //dispatched, an axios request is made to an express router in order to retrieve
   //the list of "product" objects as an array.
-  const [{ products, inCart, userList, totalOrders }, dispatch] = useReducer(
-    reducer,
-    {
+  const [{ products, inCart, userList, totalOrders, allDiscounts }, dispatch] =
+    useReducer(reducer, {
       products: [],
       inCart: [],
       userList: [],
       totalOrders: [],
-    }
-  );
+      allDiscounts: [],
+    });
   ////////////////////////////////////////////////////////////////////////////
 
   /////useState  hook used to compare and filter through matching strings
@@ -60,8 +61,26 @@ function App() {
     //  console.log('fetchCart()');
     fetchCart();
   }, []);
-  //////////////////////////////////////////////////////////
 
+  useEffect(() => {
+    const fetchDiscounts = async () => {
+      const discountCodesList = await axios.get('/api/discounts/allcodes');
+      dispatch({ type: 'ALL_DISCOUNTS', payload: discountCodesList.data });
+    };
+    fetchDiscounts();
+  }, []);
+  //////////////////////////////////////////////////////////
+  let { cartTotal } = inCart.reduce(
+    (total, cartItem) => {
+      const { price, quantity } = cartItem;
+      total.cartTotal += price * quantity * 1.0825;
+      return total;
+    },
+    {
+      cartTotal: 0,
+    }
+  );
+  ///////////////////////////////////////////////////////////
   //useEffect() hook used to refresh cart upon additional
   //addition to cart
   useEffect(() => {
@@ -71,6 +90,13 @@ function App() {
       dispatch({ type: 'RETRIEVE_CART', payload: mongoCart.data });
     };
     fetchCart();
+    //console.log('before', discount, orderPrice);
+    setPrice(() => {
+      //console.log('signs', discount, cartTotal);
+      //console.log(cartTotal);
+      return discount === 1 ? cartTotal : discount * cartTotal;
+    });
+    // console.log('after', orderPrice);
   }); //////ADD BRACKETS FOR CART FUNCTION
   /////////////////////////////////////////////////////////
 
@@ -157,9 +183,38 @@ function App() {
     _id: '',
   });
 
-  ///SignedIn User
+  ///// DISCOUNT CODE FIELD
 
-  ////////////////////////////////////
+  ////
+  const [customerCode, setCode] = useState({ name: '50off' });
+  const [discount, setDiscount] = useState(1);
+
+  function handleCodeField(event) {
+    const { name, value } = event.target;
+    setCode((values) => {
+      return {
+        ...values,
+        [name]: value,
+      };
+    });
+  }
+  ////////////////////////////
+
+  const [newCode, setAdminDiscount] = useState({ name: '', multi: '' });
+
+  const applyDiscount = async (event) => {
+    ///get a discount code
+    const name = customerCode.name;
+
+    const { data } = await axios.post('/api/discounts/find', { name });
+
+    ///send axios request
+    ///null if its false
+    const currentCode = data;
+    setDiscount(() => {
+      return currentCode.multi;
+    });
+  };
 
   ////handleChange() is the handler used to manage changing
   ///text input within each field of the "New Sale Item" form
@@ -292,22 +347,21 @@ function App() {
 
   ///uses .reduce() function to return
   ///total price of items including tax
-  let { cartTotal } = inCart.reduce(
-    (total, cartItem) => {
-      const { price, quantity } = cartItem;
-      total.cartTotal += price * quantity * 1.0825;
-      return total;
-    },
-    {
-      cartTotal: 0,
-    }
-  );
+
+  // useEffect(() => {
+
+  //cartTotal = 1;
+  // }, []);
   ////////////////////////////////////////////
+  const x = 2;
+  ///orderTotal
+  const [orderPrice, setPrice] = useState(cartTotal);
+  //console.log(cartTotal, orderPrice);
   var discountCode = false;
 
   ///Cart total while checking for discount code boolean
   cartTotal = discountCode
-    ? parseFloat(cartTotal.toFixed(2)) * 0.8
+    ? parseFloat(cartTotal.toFixed(2)) * customerCode.multi
     : parseFloat(cartTotal.toFixed(2));
   ////////////////////////////////////////////////////////
 
@@ -490,7 +544,7 @@ function App() {
     const today = new Date().toLocaleDateString('en-US');
     const custEmail = loggedOn.email;
     const custName = loggedOn.name;
-    const total = cartTotal;
+    const total = orderPrice;
     const orderItems = {
       name: custName,
       email: custEmail,
@@ -513,16 +567,109 @@ function App() {
   }
   //////////////////////
 
-  ////
+  ////NEW DISCOUNT CODE
+  function newDiscountCode(event) {
+    event.preventDefault();
+    const newDiscount = {
+      name: newCode.name,
+      multi: newCode.multi,
+    };
+    // console.log(newUser);
+    axios.post('/api/discounts/newdiscount', newDiscount);
+  }
+
+  function adminCodeEntry(event) {
+    const { name, value } = event.target;
+    setAdminDiscount((prevInput) => {
+      return {
+        ...prevInput,
+        [name]: value,
+      };
+    });
+  }
+
+  
+    function deleteDiscount(discount ,event) {
+      const discountId = discount._id;
+      axios.delete(`/api/discounts/delete/${discountId}`);
+    }
 
   const loggedOn = JSON.parse(localStorage.getItem('user'));
   return (
     <div>
+      <h3>Add/Delete Discount Codes</h3>
+      <div>
+        {allDiscounts.map((discount) => (
+          <div key={discount._id} sm={6} md={4} lg={3} className="mb-3">
+            <div>
+              Code Name: {discount.name} || Multiplier: {discount.multi}
+              <button onClick={() => deleteDiscount(discount)}> Delete</button>
+            </div>
+          </div>
+        ))}
+        <h4>Enter new discount Code:</h4>
+        <div>
+          <input
+            onChange={adminCodeEntry}
+            name="name"
+            value={newCode.name}
+            className="form-control"
+            placeholder="Discount code name"
+          ></input>
+        </div>
+        <div>
+          <input
+            onChange={adminCodeEntry}
+            name="multi"
+            value={newCode.multi}
+            placeholder="Multiplier e.g. 50% =0.5"
+          ></input>
+        </div>
+        <div>
+          <button onClick={newDiscountCode}>Submit</button>
+        </div>
+      </div>
       {/**Header Buttons, no functionality */}
-      <a href="/profile">{loggedOn ? <text>On</text> : <text>Off</text>}</a>
       {/**Header Buttons, no functionality */}
+      {/**CART DISPLAY */}
+      <h3>Cart</h3>
+      <div>
+        {inCart.map((product) => (
+          <div key={product.itemId} className="mb-3">
+            <div>
+              {product.title}
+              <button>-</button>Qty: {product.quantity}
+              <button onClick={() => addOne(product, product.quantity + 1)}>
+                +
+              </button>
+              ${product.price}{' '}
+              <button onClick={() => removeFromCart(product)}> remove</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <input
+          onChange={handleCodeField}
+          name="name"
+          value={customerCode.name}
+          className="form-control"
+          placeholder="Enter discount code"
+        ></input>{' '}
+        <button onClick={applyDiscount}>Apply Discount Code</button>
+      </div>
+      <div>
+        <text>Order Total : ${orderPrice}</text>
+      </div>
+      <button onClick={(event) => placeOrderHandler(event)}>Place Order</button>
+      {/**CART DISPLAY */}
       {/**SIGN IN*/}
+
       <h3>Sign In</h3>
+      <div>
+        {' '}
+        <a href="/profile">{loggedOn ? <text>On</text> : <text>Off</text>}</a>
+      </div>
       <div>
         <input
           onChange={handleSignInFields}
@@ -606,28 +753,7 @@ function App() {
         {''}
       </div>
       {/**Display Orders */}
-      {/**CART DISPLAY */}
-      <h3>Cart</h3>
-      <div>
-        {inCart.map((product) => (
-          <div key={product.itemId} className="mb-3">
-            <div>
-              {product.title}
-              <button>-</button>Qty: {product.quantity}
-              <button onClick={() => addOne(product, product.quantity + 1)}>
-                +
-              </button>
-              ${product.price}{' '}
-              <button onClick={() => removeFromCart(product)}> remove</button>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div>
-        <text>Order Total : ${cartTotal}</text>
-      </div>
-      <button onClick={(event) => placeOrderHandler(event)}>Place Order</button>
-      {/**CART DISPLAY */}
+
       {/*Edit User */}
       <h3>Admin User Account Changes</h3>
       <div>

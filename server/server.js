@@ -11,6 +11,8 @@ import { generateToken } from './token.js';
 import userRoute from './userRoute.js';
 import orderToMongoRouter from './ordersCreationRouter.js';
 import Order from './orderSchema.js';
+import discountMongoRouter from './discountMongoRouter.js';
+import Discount from './discountSchema.js';
 
 dotenv.config();
 mongoose
@@ -28,6 +30,7 @@ const app = express();
 app.use('/api/seed', bookToMongoRouter);
 app.use('/api/cartseed', cartToMongoRouter);
 app.use('/api/orderseed', orderToMongoRouter);
+app.use('/api/discountseed', discountMongoRouter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -67,7 +70,40 @@ app.use(
   )
 );
 
+const discountCheckRouter = express.Router();
+app.use(
+  '/api/discounts/find',
+  discountCheckRouter.post(
+    '/',
+    expressAsyncHandler(async (req, res) => {
+      const name = req.body.name;
+
+      const discountCode = await Discount.findOne({ name: name });
+      //console.log(discountCode.name);
+      if (discountCode) {
+        res.send({
+          //  _id: discountCode._id,
+          name: discountCode.name,
+          multi: discountCode.multi,
+        });
+      } else {
+        res.send(null);
+      }
+    })
+  )
+);
+
 ////GET REQUESTS
+const discountsRetrieveRouter = express.Router();
+
+app.use(
+  '/api/discounts/allcodes',
+  discountsRetrieveRouter.get('/', async (req, res) => {
+    const discountCodes = await Discount.find();
+    res.send(discountCodes);
+  })
+);
+
 app.use(
   '/api/books',
   inventoryRouter.get('/', async (req, res) => {
@@ -142,6 +178,24 @@ app.use(
   })
 );
 
+///NEW DISCOUNT CODE
+
+const newDiscountRouter = express.Router();
+app.use(
+  '/api/discounts/newdiscount',
+  newDiscountRouter.post('/', async (req, res) => {
+    const name = req.body.name;
+    const multi = req.body.multi;
+
+    const newCode = new Discount({
+      name,
+      multi,
+    });
+    newCode.save();
+  })
+);
+
+//////////////////////////////////
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: true }));
 
@@ -208,6 +262,18 @@ app.use(
   removeUserRouter.delete('/:id', async (req, res) => {
     const id = req.params.id;
     await User.findByIdAndRemove(id).exec();
+    res.send('removed from cart');
+
+    //removable.delete();
+  })
+);
+
+const removeDiscount = express.Router();
+app.use(
+  '/api/discounts/delete',
+  removeDiscount.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    await Discount.findByIdAndRemove(id).exec();
     res.send('removed from cart');
 
     //removable.delete();
