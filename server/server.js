@@ -70,6 +70,17 @@ app.use(
   )
 );
 
+////GET REQUESTS
+const discountsRetrieveRouter = express.Router();
+
+app.use(
+  '/api/discounts/allcodes',
+  discountsRetrieveRouter.get('/', async (req, res) => {
+    const discountCodes = await Discount.find();
+    res.send(discountCodes);
+  })
+);
+
 const discountCheckRouter = express.Router();
 app.use(
   '/api/discounts/find',
@@ -166,6 +177,23 @@ app.use(
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: true }));
 
+///NEW DISCOUNT CODE
+
+const newDiscountRouter = express.Router();
+app.use(
+  '/api/discounts/newdiscount',
+  newDiscountRouter.post('/', async (req, res) => {
+    const name = req.body.name;
+    const multi = req.body.multi;
+
+    const newCode = new Discount({
+      name,
+      multi,
+    });
+    newCode.save();
+  })
+);
+
 ////create book
 app.use(
   '/api/books',
@@ -217,6 +245,17 @@ app.use(
   cartRouter.delete('/:id', async (req, res) => {
     const id = req.params.id;
     await CartItem.findByIdAndRemove(id).exec();
+    res.send('removed from cart');
+
+    //removable.delete();
+  })
+);
+const removeDiscount = express.Router();
+app.use(
+  '/api/discounts/delete',
+  removeDiscount.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    await Discount.findByIdAndRemove(id).exec();
     res.send('removed from cart');
 
     //removable.delete();
