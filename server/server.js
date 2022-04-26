@@ -11,6 +11,9 @@ import { generateToken } from './token.js';
 import userRoute from './userRoute.js';
 import orderToMongoRouter from './ordersCreationRouter.js';
 import Order from './orderSchema.js';
+import discountMongoRouter from './discountMongoRouter.js';
+import Discount from './discountSchema.js';
+//import uploadRouter from './uploadRoutes.js';
 
 dotenv.config();
 mongoose
@@ -63,6 +66,29 @@ app.use(
         }
       }
       //res.status(401).send({ message: 'Invalid email or password' });
+    })
+  )
+);
+
+const discountCheckRouter = express.Router();
+app.use(
+  '/api/discounts/find',
+  discountCheckRouter.post(
+    '/',
+    expressAsyncHandler(async (req, res) => {
+      const name = req.body.name;
+
+      const discountCode = await Discount.findOne({ name: name });
+      //console.log(discountCode.name);
+      if (discountCode) {
+        res.send({
+          //  _id: discountCode._id,
+          name: discountCode.name,
+          multi: discountCode.multi,
+        });
+      } else {
+        res.send(null);
+      }
     })
   )
 );
