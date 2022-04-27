@@ -1,21 +1,21 @@
-import React from 'react';
-import './css/Cart.css';
-import './font.css';
-import { useState, useReducer, useEffect } from 'react';
-import axios from 'axios';
+import React from "react";
+import "./css/Cart.css";
+import "./font.css";
+import { useState, useReducer, useEffect } from "react";
+import axios from "axios";
 
 ////This is needed to load all of the books and to load all of the cart items
 ///For more info please see " React hooks, useReducer()"
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'PULL_INVENTORY':
+    case "PULL_INVENTORY":
       return { ...state, products: action.payload, loading: false };
-    case 'RETRIEVE_CART':
+    case "RETRIEVE_CART":
       // console.log('reducer()');
       return { ...state, inCart: action.payload, loading: false };
-    case 'PULL_USERS':
+    case "PULL_USERS":
       return { ...state, userList: action.payload, loading: false };
-    case 'PULL_ORDERS':
+    case "PULL_ORDERS":
       return { ...state, totalOrders: action.payload, loading: false };
     default:
       return state;
@@ -40,17 +40,17 @@ const Cart = () => {
   /////as well as inCart array via their reducer functions
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.get('/api/books');
-      dispatch({ type: 'PULL_INVENTORY', payload: result.data });
+      const result = await axios.get("/api/books");
+      dispatch({ type: "PULL_INVENTORY", payload: result.data });
     };
     const fetchCart = async () => {
-      const mongoCart = await axios.get('/api/cartitems');
+      const mongoCart = await axios.get("/api/cartitems");
       console.log(mongoCart.data);
-      dispatch({ type: 'RETRIEVE_CART', payload: mongoCart.data });
+      dispatch({ type: "RETRIEVE_CART", payload: mongoCart.data });
     };
 
     fetchData();
-    console.log('fetchCart()');
+    console.log("fetchCart()");
     fetchCart();
   }, []);
   //////////////////////////////////////////////////////////
@@ -59,9 +59,9 @@ const Cart = () => {
   //addition to cart
   useEffect(() => {
     const fetchCart = async () => {
-      const mongoCart = await axios.get('/api/cartitems');
+      const mongoCart = await axios.get("/api/cartitems");
       console.log(mongoCart.data);
-      dispatch({ type: 'RETRIEVE_CART', payload: mongoCart.data });
+      dispatch({ type: "RETRIEVE_CART", payload: mongoCart.data });
     };
     fetchCart();
     setPrice(() => {
@@ -92,7 +92,7 @@ const Cart = () => {
   ///removeFromCart() handler performs action of removing
   ///item from shopping cart items list from cartitems database
   const removeFromCart = async (product) => {
-    console.log('remove From cart clicked');
+    console.log("remove From cart clicked");
     const id = product._id;
     await axios.delete(`/api/cartitems/delete/${id}`);
   };
@@ -102,18 +102,21 @@ const Cart = () => {
   const addOne = (product, quantity) => {
     const newQuant = product.quantity + 1;
     const id = product._id;
-    axios.put('/api/cartitems/increase', { quantity: newQuant, _id: id }); //.then(fetchCart());
+    axios.put("/api/cartitems/increase", { quantity: newQuant, _id: id }); //.then(fetchCart());
   };
   //////////////////////////////////////////
 
   ///addOne() handler increases number of item quantity in cart by one
   const removeOne = (product, quantity) => {
-    const newQuant = product.quantity - 1;
-    const id = product._id;
-    axios.put('/api/cartitems/increase', { quantity: newQuant, _id: id }); //.then(fetchCart());
+    if (product.quantity > 1) {
+      const newQuant = product.quantity - 1;
+      const id = product._id;
+      axios.put("/api/cartitems/increase", { quantity: newQuant, _id: id }); //.then(fetchCart());
+    }
   };
   //////////////////////////////////////////
-  const [customerCode, setCode] = useState({ name: '' });
+
+  const [customerCode, setCode] = useState({ name: "" });
   const [discount, setDiscount] = useState(1);
   const [orderPrice, setPrice] = useState(cartTotal);
 
@@ -131,7 +134,7 @@ const Cart = () => {
     ///get a discount code
     const name = customerCode.name;
     console.log(name);
-    const { data } = await axios.post('/api/discounts/find', { name });
+    const { data } = await axios.post("/api/discounts/find", { name });
 
     ///send axios request
     ///null if its false
@@ -172,10 +175,10 @@ const Cart = () => {
     ? parseFloat(cartTotal.toFixed(2)) * 0.8
     : parseFloat(cartTotal.toFixed(2));
   ////////////////////////////////////////////////////////
-  const loggedOn = JSON.parse(localStorage.getItem('user'));
+  const loggedOn = JSON.parse(localStorage.getItem("user"));
   function placeOrderHandler(event) {
     const currentCart = inCart;
-    const today = new Date().toLocaleDateString('en-US');
+    const today = new Date().toLocaleDateString("en-US");
     const custEmail = loggedOn.email;
     const custName = loggedOn.name;
     const total = orderPrice;
@@ -187,7 +190,24 @@ const Cart = () => {
       total: total,
     };
 
-    axios.post('/api/orders/neworder', orderItems);
+    axios.post("/api/orders/neworder", orderItems);
+
+    for (let i = 0; i < currentCart.length; i++) {
+      for (let j = 0; j < products.length; j++) {
+        if (currentCart[i].itemId == products[j]._id) {
+          products[j].stock -= currentCart[i].quantity;
+          axios.put("/api/books/edititems", {
+            _id: products[j]._id,
+            title: products[j].title,
+            author: products[j].author,
+            genre: products[j].genre,
+            price: products[j].price,
+            stock: products[j].stock,
+            description: products[j].description,
+          });
+        }
+      }
+    }
   }
 
   return (
@@ -211,7 +231,7 @@ const Cart = () => {
                   {product.author}
                 </div>
                 <div className="my-cart-book-price cart-book-info">
-                  ${product.price}{' '}
+                  ${product.price}{" "}
                 </div>
                 <div className="my-cart-book-qty cart-book-info">
                   <button
@@ -250,7 +270,7 @@ const Cart = () => {
           value={customerCode.name}
           className="form-control"
           placeholder="Enter discount code"
-        ></input>{' '}
+        ></input>{" "}
         <button onClick={applyDiscount} className="applyBtn">
           Apply Discount
         </button>
@@ -259,7 +279,7 @@ const Cart = () => {
       <div className="price">
         <label>Subtotal: ${subTotal.toFixed(2)}</label>
         <label>
-          Discount:{' '}
+          Discount:{" "}
           {discount == 1 ? (
             <text>$0.00</text>
           ) : (

@@ -1,19 +1,19 @@
-import { useState, useReducer, useEffect } from 'react';
-import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
+import { useState, useReducer, useEffect } from "react";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 ////This is needed to load all of the books and to load all of the cart items
 ///For more info please see " React hooks, useReducer()"
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'PULL_INVENTORY':
+    case "PULL_INVENTORY":
       return { ...state, products: action.payload, loading: false };
-    case 'RETRIEVE_CART':
+    case "RETRIEVE_CART":
       // console.log('reducer()');
       return { ...state, inCart: action.payload, loading: false };
-    case 'PULL_USERS':
+    case "PULL_USERS":
       return { ...state, userList: action.payload, loading: false };
-    case 'PULL_ORDERS':
+    case "PULL_ORDERS":
       return { ...state, totalOrders: action.payload, loading: false };
     default:
       return state;
@@ -39,20 +39,20 @@ function App() {
 
   /////useState  hook used to compare and filter through matching strings
   ////within the book title or author name
-  const [searchKey, setSearchKey] = useState('');
+  const [searchKey, setSearchKey] = useState("");
   /////////////////////////////////////////////////////////////////////
 
   /////useEffect() hook sends get request to load "products" array,
   /////as well as inCart array via their reducer functions
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.get('/api/books');
-      dispatch({ type: 'PULL_INVENTORY', payload: result.data });
+      const result = await axios.get("/api/books");
+      dispatch({ type: "PULL_INVENTORY", payload: result.data });
     };
     const fetchCart = async () => {
-      const mongoCart = await axios.get('/api/cartitems');
+      const mongoCart = await axios.get("/api/cartitems");
       // console.log(mongoCart.data);
-      dispatch({ type: 'RETRIEVE_CART', payload: mongoCart.data });
+      dispatch({ type: "RETRIEVE_CART", payload: mongoCart.data });
     };
 
     fetchData();
@@ -65,9 +65,9 @@ function App() {
   //addition to cart
   useEffect(() => {
     const fetchCart = async () => {
-      const mongoCart = await axios.get('/api/cartitems');
+      const mongoCart = await axios.get("/api/cartitems");
       // console.log(mongoCart.data);
-      dispatch({ type: 'RETRIEVE_CART', payload: mongoCart.data });
+      dispatch({ type: "RETRIEVE_CART", payload: mongoCart.data });
     };
     fetchCart();
   }); //////ADD BRACKETS FOR CART FUNCTION
@@ -76,9 +76,9 @@ function App() {
   //ADMIN USER ACCOUNT CHANGES useEffect() hook needed to load all users
   useEffect(() => {
     const fetchUsers = async () => {
-      const list = await axios.get('/api/users/pull');
+      const list = await axios.get("/api/users/pull");
       // console.log(mongoCart.data);
-      dispatch({ type: 'PULL_USERS', payload: list.data });
+      dispatch({ type: "PULL_USERS", payload: list.data });
     };
     fetchUsers();
   }, []);
@@ -89,8 +89,8 @@ function App() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const allOrders = await axios.get('/api/orders/requestall');
-      dispatch({ type: 'PULL_ORDERS', payload: allOrders.data });
+      const allOrders = await axios.get("/api/orders/requestall");
+      dispatch({ type: "PULL_ORDERS", payload: allOrders.data });
     };
     fetchOrders();
     // console.log(totalOrders.items);
@@ -101,59 +101,59 @@ function App() {
   ////useState() hook used to create and "input" object that
   ///includes all of the needed fields to create new book item
   const [input, setInput] = useState({
-    title: '',
-    author: '',
-    reference: '',
-    genre: '',
-    image: '',
-    price: '',
-    stock: '',
-    description: '',
+    title: "",
+    author: "",
+    reference: "",
+    genre: "",
+    image: "",
+    price: "",
+    stock: "",
+    description: "",
   });
   ///////////////////////////////////////////////////////////
 
   ///hook used to get information from user input fields
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    password: '',
+    name: "",
+    email: "",
+    password: "",
   });
   ///////////////////////////////////////////////////
 
   ///hook for SIGN IN form functionality
   const [signfield, setSignIn] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   ///////////////////////////////////////////////////
 
   ////hook for EDIT ITEMS
   const [editedBook, setEdit] = useState({
-    _id: '',
-    titleEdit: '',
-    authorEdit: '',
-    genreEdit: '',
-    priceEdit: '',
-    stockEdit: '',
-    descriptionEdit: '',
+    _id: "",
+    titleEdit: "",
+    authorEdit: "",
+    genreEdit: "",
+    priceEdit: "",
+    stockEdit: "",
+    descriptionEdit: "",
   });
   ///////////////////////////////////////////
 
   /// hook for EDITING USER ACCOUNTS
 
   const [editAccount, setAccount] = useState({
-    _id: '',
-    nameEdit: '',
-    emailEdit: '',
-    isAdminEdit: '',
+    _id: "",
+    nameEdit: "",
+    emailEdit: "",
+    isAdminEdit: "",
   });
 
   /////////////////////////////////
   const [onlineUser, setUser] = useState({
-    email: '',
-    isAdmin: '',
-    name: '',
-    _id: '',
+    email: "",
+    isAdmin: "",
+    name: "",
+    _id: "",
   });
 
   ///SignedIn User
@@ -188,7 +188,7 @@ function App() {
       stock: input.stock,
       description: input.description,
     };
-    axios.post('/api/books', newBook);
+    axios.post("/api/books", newBook);
   }
   ///////////////////////////////////////////////
 
@@ -203,16 +203,16 @@ function App() {
       quantity: 1,
       price: product.price,
     };
-    console.log('BEFORE posting to cart');
-    axios.post('/api/cartitems/addToCart', newCartItem);
-    console.log('AFTER posting to cart');
+    console.log("BEFORE posting to cart");
+    axios.post("/api/cartitems/addToCart", newCartItem);
+    console.log("AFTER posting to cart");
   }
   ////////////////////////////////////////////
 
   ///removeFromCart() handler performs action of removing
   ///item from shopping cart items list from cartitems database
   const removeFromCart = async (product) => {
-    console.log('remove From cart clicked');
+    console.log("remove From cart clicked");
     const id = product._id;
     await axios.delete(`/api/cartitems/delete/${id}`);
   };
@@ -222,7 +222,7 @@ function App() {
   const addOne = (product, quantity) => {
     const newQuant = product.quantity + 1;
     const id = product._id;
-    axios.put('/api/cartitems/increase', { quantity: newQuant, _id: id }); //.then(fetchCart());
+    axios.put("/api/cartitems/increase", { quantity: newQuant, _id: id }); //.then(fetchCart());
   };
   //////////////////////////////////////////
 
@@ -286,7 +286,7 @@ function App() {
       password: form.password,
     };
     console.log(newUser);
-    axios.post('/api/users/newaccount', newUser);
+    axios.post("/api/users/newaccount", newUser);
   }
   //////////////////////////
 
@@ -314,8 +314,6 @@ function App() {
   }
   ////////////////////////////
 
-  
-
   ///SIGN IN
   const signInHandler = async (event) => {
     event.preventDefault();
@@ -329,12 +327,12 @@ function App() {
       password: signfield.password,
     };
 
-    const { data } = await axios.post('/api/users/signin', {
+    const { data } = await axios.post("/api/users/signin", {
       email,
       password,
     });
 
-    console.log('printed data', data);
+    console.log("printed data", data);
     const loggedUser = data;
     console.log(loggedUser);
     //console.log(JSON.stringify(loggedUser));
@@ -371,7 +369,7 @@ function App() {
     const newStock = editedBook.stockEdit;
     const newDesc = editedBook.descriptionEdit;
 
-    axios.put('/api/books/edititems', {
+    axios.put("/api/books/edititems", {
       _id: id,
       title: newTitle,
       author: newAuthor,
@@ -434,7 +432,7 @@ function App() {
     const adminStatus = editAccount.isAdminEdit;
     console.log(adminStatus);
 
-    axios.put('/api/users/editaccounts', {
+    axios.put("/api/users/editaccounts", {
       _id: id,
       name: newName,
       email: newEmail,
@@ -455,7 +453,7 @@ function App() {
     const currentCart = inCart;
     const orderItems = { items: currentCart };
 
-    axios.post('/api/orders/neworder', orderItems);
+    axios.post("/api/orders/neworder", orderItems);
   }
 
   //////
@@ -528,7 +526,7 @@ function App() {
       <h3>Orders</h3>
       <button onClick={() => printInfo()}>PRINT</button>
       <div>
-        {''}
+        {""}
         {totalOrders.map((order) => (
           <div key={order._id} sm={6} md={4} lg={3} className="mb-3">
             <div>
@@ -544,7 +542,7 @@ function App() {
             </div>
           </div>
         ))}
-        {''}
+        {""}
       </div>
       {/**Display Orders */}
       {/**CART DISPLAY */}
@@ -554,11 +552,14 @@ function App() {
           <div key={product.itemId} className="mb-3">
             <div>
               {product.title}
-              <button>-</button>Qty: {product.quantity}
+              <button>
+                -
+              </button>
+              Qty: {product.quantity}
               <button onClick={() => addOne(product, product.quantity + 1)}>
                 +
               </button>
-              ${product.price}{' '}
+              ${product.price}{" "}
               <button onClick={() => removeFromCart(product)}> remove</button>
             </div>
           </div>
@@ -576,8 +577,8 @@ function App() {
           <div key={account._id} sm={6} md={4} lg={3} className="mb-3">
             <div>
               Name: {account.name} || Email: {account.email} || Admin Status:
-              {account.isAdmin ? 'true' : 'false'}
-              {'  '}
+              {account.isAdmin ? "true" : "false"}
+              {"  "}
               <button onClick={() => accountToEdit(account)}> Edit User</button>
             </div>
           </div>
@@ -614,7 +615,7 @@ function App() {
         Submit Change
       </button>
       <button onClick={(event) => deleteAccountHandler(editAccount, event)}>
-        {' '}
+        {" "}
         Delete
       </button>
       {/*Edit User */}
@@ -624,7 +625,7 @@ function App() {
         {products.map((product) => (
           <div key={product._id} sm={6} md={4} lg={3} className="mb-3">
             <div>
-              {product.title} by {product.author} - ${product.price}- Stock:{' '}
+              {product.title} by {product.author} - ${product.price}- Stock:{" "}
               {product.stock} - Genre: {product.genre} -
               <button onClick={() => itemToEdit(product)}> Edit Item</button>
             </div>
@@ -687,7 +688,7 @@ function App() {
         ></input>
       </div>
       <button onClick={(event) => pushItemChange(editedBook, event)}>
-        {' '}
+        {" "}
         Submit Change
       </button>
 
@@ -792,7 +793,7 @@ function App() {
       <div>
         {/**SORTING BUTTONS */}
         <button onClick={() => sortExpensiveItems(products)}>
-          {' '}
+          {" "}
           Sort by $$$
         </button>
         <button onClick={() => sortCheapItems(products)}> Sort by $</button>
@@ -802,7 +803,7 @@ function App() {
         {/*SERACH BAR RESULTS : If the user has typed in the search bar, it will filter for these first before displaying anything*/}
         {products
           .filter((product) => {
-            if (searchKey === '') {
+            if (searchKey === "") {
               return product;
             } else if (
               product.title.toLowerCase().includes(searchKey.toLowerCase()) ||
