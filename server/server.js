@@ -174,8 +174,13 @@ const newOrderRouter = express.Router();
 app.use(
   '/api/orders/neworder',
   newOrderRouter.post('/', async (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    const date = req.body.date;
     const items = req.body.items;
-    const recentOrder = new Order({ items });
+    const total = req.body.total;
+
+    const recentOrder = new Order({ name, email, date, total, items });
     recentOrder.save();
   })
 );
@@ -253,12 +258,16 @@ app.use(
   cartRouter.post('/', async (req, res) => {
     const itemId = req.body.itemId;
     const title = req.body.title;
+    const author = req.body.author;
+    const image = req.body.image;
     const quantity = req.body.quantity;
     const price = req.body.price;
 
     const newCartItem = new CartItem({
       itemId,
       title,
+      author,
+      image,
       quantity,
       price,
     });

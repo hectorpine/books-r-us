@@ -69,7 +69,9 @@ const Cart = () => {
       //console.log(cartTotal);
       // return 22;
       console.log(discount);
-      return discount === 1 ? cartTotal : 0.9 * cartTotal;
+      return discount === 1
+        ? cartTotal * 1.0825
+        : discount * cartTotal * 1.0825;
     });
   });
   /////////////////////////////////////////////////////////
@@ -79,7 +81,7 @@ const Cart = () => {
   let { cartTotal } = inCart.reduce(
     (total, cartItem) => {
       const { price, quantity } = cartItem;
-      total.cartTotal += price * quantity * 1.0825;
+      total.cartTotal += price * quantity;
       return total;
     },
     {
@@ -111,7 +113,7 @@ const Cart = () => {
     axios.put('/api/cartitems/increase', { quantity: newQuant, _id: id }); //.then(fetchCart());
   };
   //////////////////////////////////////////
-  const [customerCode, setCode] = useState({ name: '50off' });
+  const [customerCode, setCode] = useState({ name: '' });
   const [discount, setDiscount] = useState(1);
   const [orderPrice, setPrice] = useState(cartTotal);
 
@@ -197,14 +199,16 @@ const Cart = () => {
         <div>
           {inCart.map((product) => (
             <div key={product.itemId} className="my-cart-books">
-              <div className="my-cart-book-img"></div>
+              <div className="my-cart-book-img">
+                <img src={product.image} alt="" width="160" height="220"></img>
+              </div>
 
               <div className="my-cart-book-info">
                 <div className="my-cart-book-title cart-book-info">
                   {product.title}
                 </div>
                 <div className="my-cart-book-author cart-book-info">
-                  Book Author
+                  {product.author}
                 </div>
                 <div className="my-cart-book-price cart-book-info">
                   ${product.price}{' '}
@@ -254,10 +258,22 @@ const Cart = () => {
 
       <div className="price">
         <label>Subtotal: ${subTotal.toFixed(2)}</label>
-        <label>Discount: </label>
-        <label>Tax: ${tax.toFixed(2)}</label>
+        <label>
+          Discount:{' '}
+          {discount == 1 ? (
+            <text>$0.00</text>
+          ) : (
+            <text>${((1 - discount) * cartTotal).toFixed(2)}</text>
+          )}
+        </label>
+        <label>Tax: ${((orderPrice / 1.0825) * 0.0825).toFixed(2)}</label>
         <label>Total: ${orderPrice.toFixed(2)}</label>
-        <button className="checkoutBtn">Checkout</button>
+        <button
+          className="checkoutBtn"
+          onClick={(event) => placeOrderHandler(event)}
+        >
+          Checkout
+        </button>
       </div>
     </div>
   );

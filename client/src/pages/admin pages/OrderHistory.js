@@ -1,29 +1,29 @@
-import React from "react";
+import React from 'react';
 import { useState, useReducer, useEffect } from 'react';
 import '../font.css';
-import './css/OrderHistory.css'
+import './css/OrderHistory.css';
 import axios from 'axios';
 
 ////This is needed to load all of the books and to load all of the cart items
 ///For more info please see " React hooks, useReducer()"
 const reducer = (state, action) => {
-    switch (action.type) {
-      case 'PULL_INVENTORY':
-        return { ...state, products: action.payload, loading: false };
-      case 'RETRIEVE_CART':
-        // console.log('reducer()');
-        return { ...state, inCart: action.payload, loading: false };
-      case 'PULL_USERS':
-        return { ...state, userList: action.payload, loading: false };
-      case 'PULL_ORDERS':
-        return { ...state, totalOrders: action.payload, loading: false };
-      default:
-        return state;
-    }
-  };
-  ////////////////////////////////////////////////////////////////////////////
+  switch (action.type) {
+    case 'PULL_INVENTORY':
+      return { ...state, products: action.payload, loading: false };
+    case 'RETRIEVE_CART':
+      // console.log('reducer()');
+      return { ...state, inCart: action.payload, loading: false };
+    case 'PULL_USERS':
+      return { ...state, userList: action.payload, loading: false };
+    case 'PULL_ORDERS':
+      return { ...state, totalOrders: action.payload, loading: false };
+    default:
+      return state;
+  }
+};
+////////////////////////////////////////////////////////////////////////////
 
-const OrderHistory = () =>{
+const OrderHistory = () => {
   //This is where the "products" and "inCart" objects are declared as arrays,
   // these arrays are declared from an empty state, when the reducer function is
   //dispatched, an axios request is made to an express router in order to retrieve
@@ -316,8 +316,6 @@ const OrderHistory = () =>{
   }
   ////////////////////////////
 
-  
-
   ///SIGN IN
   const signInHandler = async (event) => {
     event.preventDefault();
@@ -468,38 +466,80 @@ const OrderHistory = () =>{
     console.log(totalOrders);
   }
   //////////////////////
-    
-    return <div> 
+
+  ///admin ORDERS
+  const adminSortName = (totalOrders) => {
+    function highToLowPrice(a, b) {
+     // console.log(a.total, b.total);
+      return a.name.localeCompare(b.name);
+    }
+    console.log(totalOrders);
+    totalOrders.sort(highToLowPrice);
+    console.log(totalOrders);
+  };
+
+  const adminSortDate = (totalOrders) => {
+    function dateOrder(a, b) {
+      return new Date(a.date) - new Date(b.date);
+    }
+    totalOrders.sort(dateOrder);
+  };
+
+  const adminSortExpensive = (totalOrders) => {
+    function highToLowPrice(a, b) {
+      return b.total - a.total;
+    }
+    totalOrders.sort(highToLowPrice);
+  };
+
+  const adminSortCheap = (totalOrders) => {
+    function lowToHighPrice(a, b) {
+      return a.total - b.total;
+    }
+    totalOrders.sort(lowToHighPrice);
+  };
+  ////////////////////////////////////
+
+  return (
+    <div>
       <div className="orders-container">
+        <button onClick={() => adminSortName(totalOrders)}>SortByName</button>
+        <button onClick={() => adminSortDate(totalOrders)}>SortByDate</button>
+        <button onClick={() => adminSortExpensive(totalOrders)}>
+          SortByExpensive
+        </button>
+        <button onClick={() => adminSortCheap(totalOrders)}>SortByCheap</button>
         {''}
         {totalOrders.map((order) => (
           <div key={order._id} sm={6} md={4} lg={3} className="order">
             <div>
-                <label className="order-num">Order: </label> {order._id}
-                <div className="order-labels">
-                    <label>Title</label>
-                    <label>Qty</label>
-                    <label>Price</label>
-                </div>
+              <label className="order-num">Order: </label> {order._id}
+              <div className="order-labels">
                 <div>
-                    {order.items.map((item) => (
-                    <div key={item._id} sm={6} md={4} lg={3} className="mb-3">
-                        <div className="order-info">
-                            <label>{item.title}</label>
-                            <label>{item.quantity}</label>
-                            <label>${item.price}</label>
-                        </div>
-                        
-                    </div>
-                    ))}
+                  <label>Total: $$${order.total}</label>
                 </div>
+                <label>Title</label>
+                <label>Qty</label>
+                <label>Price</label>
+              </div>
+              <div>
+                {order.items.map((item) => (
+                  <div key={item._id} sm={6} md={4} lg={3} className="mb-3">
+                    <div className="order-info">
+                      <label>{item.title}</label>
+                      <label>{item.quantity}</label>
+                      <label>${item.price}</label>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         ))}
         {''}
       </div>
     </div>
-   
-}
+  );
+};
 
 export default OrderHistory;
