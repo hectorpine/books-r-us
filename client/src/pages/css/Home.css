@@ -1,186 +1,151 @@
 .homepage-book-container{
-    position: relative;
-    display:grid;
-    grid-template-columns: auto auto auto auto;
-    margin: 320px 50px;
-    gap: 90px;
-    z-index: 0;
-   /* background-color: pink;*/
+  position: relative;
+  display:grid;
+  grid-template-columns: auto auto auto auto;
+  margin: 320px 50px;
+  gap: 90px;
+  z-index: 0;
+ /* background-color: pink;*/
 }
 /*
 .homepage-bkg{
-  background-color: pink;
-  width:100%;
-  height: 188px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
+background-color: pink;
+width:100%;
+height: 188px;
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1;
 }*/
 
 .search input {
-  border: 1px outset black;
-  width: 650px;
-  height: 30px;
-  position: absolute;
-  font-size: medium;
- 
-  padding-inline-start: 5px;
-  margin: 210px 25%;
+border: 1px outset black;
+width: 650px;
+height: 30px;
+position: absolute;
+font-size: medium;
+
+padding-inline-start: 5px;
+margin: 210px 25%;
 
 }
 ::placeholder{
-  font-size: medium;
+font-size: medium;
 }
 
 .searchButton button{
-  background-color: transparent;
-  border: 1px outset black;
-  width: 40px;
-  height: 34px;
-  position: absolute;
-  margin: 80px 977px;
-  cursor:pointer;
+background-color: transparent;
+border: 1px outset black;
+width: 40px;
+height: 34px;
+position: absolute;
+margin: 80px 977px;
+cursor:pointer;
 }
 
 
 
 .filter-dropdown{
-  margin: 210px 80%;
-  position: absolute;
-  display: inline-block;
+margin: 210px 80%;
+position: absolute;
+display: inline-block;
 }
 
 .filter-dropdown button.filter-search-btn{
-  position: absolute;
-  width: 130px;
-  height: 30px;
-  cursor: pointer;
-  background-color: transparent;
-  border: 1px solid black;
-  border-radius: 15px;
-  text-align: left;
-  padding-left: 10px;
-  font-weight:600;
-  font-size: 14px;
+position: absolute;
+width: 130px;
+height: 30px;
+cursor: pointer;
+background-color: transparent;
+border: 1px solid black;
+border-radius: 15px;
+text-align: left;
+padding-left: 10px;
+font-weight:600;
+font-size: 14px;
 }
 
 .filter-expand{
-  position: absolute;
-  margin: -3px 0;
-  align-content:flex-end;
+position: absolute;
+margin: -3px 0;
+align-content:flex-end;
 }
 
 
 .filter-btn-container{
-  width: 130px;
-  height:100px;
-  margin: 32px 0;
-  border: 1px solid black;
-  border-radius: 15px;
-  background-color: white;
-  position: absolute;
-  display: none;
-  z-index: 1;
+width: 130px;
+height:100px;
+margin: 32px 0;
+border: 1px solid black;
+border-radius: 15px;
+background-color: white;
+position: absolute;
+display: none;
+z-index: 1;
 }
 
 .filter-dropdown:hover .filter-btn-container{
-  display: block;
+display: block;
 }
 
 .filter-btn-container button{
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding-top: 12px;
-  font-size: 13px;
-  font-weight: 500;
+background-color: transparent;
+border: none;
+cursor: pointer;
+padding-top: 12px;
+font-size: 13px;
+font-weight: 500;
 }
 .filter-btn-container button:hover{
-  text-decoration: underline;
+text-decoration: underline;
 }
 
 .display-books{
-    width: 250px;
-    height: 320px;
-    padding-bottom: 30px;
-    display: flex;
-    align-items: flex-end;
-   /* background-color: lightblue;*/
-    z-index: 0;
+  width: 250px;
+  height: 320px;
+  padding-bottom: 30px;
+  display: flex;
+  align-items: flex-end;
+ /* background-color: lightblue;*/
+  z-index: 0;
 }
 
 .product-img{
-    position: absolute;
-    width: 250px;
-    height: 370px;
-    z-index: -1;
+  position: absolute;
+  width: 250px;
+  height: 370px;
+  z-index: -1;
 }
 
 .display-books:hover  .product-img{
-    z-index: -4;
+  z-index: -4;
 
 }
 
 .quick-view-bkgrnd{
-    width: 100%;
-    height: 70px;
-    background-color: black;
-    position: relative;
-    opacity: .5;
-    z-index: -3;
+  width: 100%;
+  height: 70px;
+  background-color: black;
+  position: relative;
+  opacity: .5;
+  z-index: -3;
+}
+
+#view-book-btn:link {
+  position: absolute;
+  z-index: -2;
 }
 
 .quick-view-btn{
-    background-color: transparent;
-    width: 150px;
-    border: none;
-    color: white;
-    font-size: 18px;
-    margin: 20px 50px;
-    position: absolute;
-    z-index: -2;
-    cursor: pointer;
+background-color: transparent;
+width: 150px;
+border: none;
+color: white;
+font-size: 18px;
+margin: 20px 50px;
+cursor: pointer;
 }
 
 
 
-
-.quick-view-modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-  
-  /* Modal Content */
-  .qv-content{
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-  }
-  
-  /* The Close Button */
-  .close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-  }

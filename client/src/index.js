@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import App from './App';
 import Header from "./header/Header"
 import Home from "./pages/Home";
@@ -15,26 +15,33 @@ import OrderHistory from "./pages/admin pages/OrderHistory";
 import Sales from "./pages/admin pages/DiscountCodes";
 import ViewUsers from "./pages/admin pages/ViewUsers";
 import Cart from "./pages/Cart";
+import BookDetails from './pages/BookDetails';
 
 export default function Pages() {
+ 
   return(
     <Router>
       <Routes>
         <Route path="/app" element={<App />} ></Route>
 
-        <Route path="/" element={<Header />}>
+        <Route exact path="/" element={<Header />}>
           <Route index element={<Home />} />
           <Route path="cart" element={<Cart/>} />
+      
+          
+          <Route path='/:productId' element={<BookDetails />}></Route>
+        
           <Route path="/myaccount" element={<MyAccountNav />}>
             <Route index element={<MyAccount />} />
             <Route path="myorders" element={<MyOrders />} />
           </Route>
         </Route>
+        
         <Route path="/admin" element={<AdminView />} >
           <Route index element={<AddNewBook />} />
           <Route path="viewinventory" element={<ViewInventory />} />
           <Route path="orderhistory" element={<OrderHistory />} />
-          <Route path="sales" element={<Sales />} />
+          <Route path="discounts" element={<Sales />} />
           <Route path="users" element={<ViewUsers />} />
         </Route>
 

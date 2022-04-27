@@ -1,0 +1,65 @@
+.dicount-input {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin: -200px 52%;
+    position: absolute;
+
+ }
+
+.dicount-input input {
+    width: 600px;
+    height: 20px;
+    color: #202020;
+    font-size: medium;
+    padding-left: 3px;
+    border: .8px solid black;
+}
+
+.dicount-input label{
+    padding-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #202020;
+}
+
+h9{
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.dicount-input  button.submit-code{
+    height: 40px;
+    width: 155px;
+    font-size: 18px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: relative;
+    margin: 40px 230px;
+    cursor: pointer;
+}
+
+.discounts-available{
+    position: absolute;
+
+    margin: -200px 18%;
+}
+.discounts-available button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+}
+
+.discount-code{
+    display: flex;
+    flex-direction: column;
+    font-weight: 400;
+    padding-top: 20px;
+}
+
+.discount-code button{
+    margin-left: 150px;
+}

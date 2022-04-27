@@ -1,0 +1,71 @@
+.book-details-img{
+    margin: 200px 8%;
+    position: absolute;
+    width: 25%;
+    height: 65%;
+    z-index: -1;
+}
+
+.book-details{
+    width: 60%;
+    position: absolute;
+    margin: 200px 35%;
+}
+
+.book-details-title{
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 600;
+    font-size: 32px;
+}
+.book-details-author{
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 200;
+    font-size: 22px;
+    position: absolute;
+}
+.book-details-genre{
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 200;
+    font-size: 18px;
+    text-align: right;
+}
+
+.book-details-description{
+    font-family: 'Times New Roman', Times, serif;
+    border: .5px solid black;
+    font-size: 18px;
+    margin: 20px 5%;
+    width:90%;
+    padding: 10px;
+    flex-direction: column;
+}
+
+.add-to-cart-btn{
+    width: 100px;
+    padding: 8px;
+    font-size: 16px;
+    border: none;
+    color: white;
+    background-color: #19394A;
+    border-radius: 10px;
+    position: absolute;
+    margin-left: 5%;
+    cursor: pointer;
+}
+
+.book-details-price {
+    font-family: 'Times New Roman', Times, serif;
+    position: absolute;
+    text-align: left;
+    font-size: 20px;
+    margin: 10px 45%;
+
+}
+
+.book-details-qty {
+    font-family: 'Times New Roman', Times, serif;
+    position: absolute;
+    font-size: 20px;
+    margin: 10px 90%;
+
+}

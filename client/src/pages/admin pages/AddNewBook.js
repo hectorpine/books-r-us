@@ -87,6 +87,8 @@ const AddNewBook = () => {
     }
   }
 
+ 
+
   return (
     <div>
       <div className="newBook">
@@ -102,7 +104,7 @@ const AddNewBook = () => {
             </div>
             <span class="material-icons addPhoto">photo_library</span>
           </div>
-          <label for="imgBtn">Upload Image</label>
+          
           <input
             type="file"
             id="imgBtn"

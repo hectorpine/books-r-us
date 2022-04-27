@@ -43,7 +43,7 @@ for (var i = 0; i < btns.length; i++) {
                     <button class="adminBtn">Order History</button>
                 </Link> <br/>
                 <div className="l1"></div>
-                <Link to="sales">
+                <Link to="discounts">
                     <button class="adminBtn">Discount Codes</button>
                 </Link> <br/>
                 <div className="l1"></div>

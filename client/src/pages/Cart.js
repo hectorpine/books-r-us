@@ -28,7 +28,7 @@ const Cart = () => {
   // these arrays are declared from an empty state, when the reducer function is
   //dispatched, an axios request is made to an express router in order to retrieve
   //the list of "product" objects as an array.
-  const [{ inCart }, dispatch] = useReducer(reducer, {
+  const [{ inCart, products }, dispatch] = useReducer(reducer, {
     products: [],
     inCart: [],
     userList: [],
@@ -194,7 +194,7 @@ const Cart = () => {
 
     for (let i = 0; i < currentCart.length; i++) {
       for (let j = 0; j < products.length; j++) {
-        if (currentCart[i].itemId == products[j]._id) {
+        if (currentCart[i].itemId === products[j]._id) {
           products[j].stock -= currentCart[i].quantity;
           axios.put("/api/books/edititems", {
             _id: products[j]._id,
@@ -280,7 +280,7 @@ const Cart = () => {
         <label>Subtotal: ${subTotal.toFixed(2)}</label>
         <label>
           Discount:{" "}
-          {discount == 1 ? (
+          {discount === 1 ? (
             <text>$0.00</text>
           ) : (
             <text>${((1 - discount) * cartTotal).toFixed(2)}</text>

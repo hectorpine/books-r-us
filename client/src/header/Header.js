@@ -75,13 +75,15 @@ const Header = () => {
       email,
       password,
     });
-
+    
     console.log('printed data', data);
     const loggedUser = data;
     console.log(loggedUser);
     //console.log(JSON.stringify(loggedUser));
     localStorage.setItem('user', JSON.stringify(loggedUser));
     console.log('this local', JSON.parse(localStorage.getItem('user')));
+    window.location.reload();
+    
   };
   ////////////////////////////////////////////////////////////////////////////////////
 
