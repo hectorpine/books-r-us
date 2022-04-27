@@ -44,7 +44,6 @@ console.log('Should be api/books request');
 const signInRouter = express.Router();
 //app.use('/api/users', userRoute);
 
-
 const upload = multer();
 const uploadRouter = express.Router();
 app.use(
@@ -67,7 +66,6 @@ app.use(
     res.send(result);
   })
 );
-
 
 app.use(
   '/api/users/signin',
@@ -222,10 +220,11 @@ app.use(
   })
 );
 
+const newBookRouter = express.Router();
 ////create book
 app.use(
-  '/api/books',
-  inventoryRouter.post('/', async (req, res) => {
+  '/api/books/newbook',
+  newBookRouter.post('/', async (req, res) => {
     const title = req.body.title;
     const author = req.body.author;
     const reference = req.body.reference;
