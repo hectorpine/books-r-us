@@ -1,28 +1,29 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import bookToMongoRouter from "./mongoSchemaCreation.js";
-import Book from "./bookInfoSchema.js";
-import cartToMongoRouter from "./cartCreationRouter.js";
-import CartItem from "./cartItemSchema.js";
-import User from "./userAccountSchema.js";
-import expressAsyncHandler from "express-async-handler";
-import { generateToken } from "./token.js";
-import userRoute from "./userRoute.js";
-import orderToMongoRouter from "./ordersCreationRouter.js";
-import Order from "./orderSchema.js";
-import discountMongoRouter from "./discountMongoRouter.js";
-import Discount from "./discountSchema.js";
+import express from 'express';
+import mongoose from 'mongoose';
+import path from 'path';
+import dotenv from 'dotenv';
+import bookToMongoRouter from './mongoSchemaCreation.js';
+import Book from './bookInfoSchema.js';
+import cartToMongoRouter from './cartCreationRouter.js';
+import CartItem from './cartItemSchema.js';
+import User from './userAccountSchema.js';
+import expressAsyncHandler from 'express-async-handler';
+import { generateToken } from './token.js';
+import userRoute from './userRoute.js';
+import orderToMongoRouter from './ordersCreationRouter.js';
+import Order from './orderSchema.js';
+import discountMongoRouter from './discountMongoRouter.js';
+import Discount from './discountSchema.js';
 //import uploadRouter from './uploadRoutes.js';
-import multer from "multer";
-import { v2 as cloudinary } from "cloudinary";
-import streamifier from "streamifier";
+import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
+import streamifier from 'streamifier';
 
 dotenv.config();
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log("connected to db");
+    console.log('connected to db');
   })
   .catch((err) => {
     console.log(err.message);
@@ -31,15 +32,15 @@ mongoose
 //app is an function that calls the express function
 const app = express();
 ///book inventory seed
-app.use("/api/seed", bookToMongoRouter);
-app.use("/api/cartseed", cartToMongoRouter);
-app.use("/api/orderseed", orderToMongoRouter);
+app.use('/api/seed', bookToMongoRouter);
+app.use('/api/cartseed', cartToMongoRouter);
+app.use('/api/orderseed', orderToMongoRouter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const inventoryRouter = express.Router();
-console.log("Should be api/books request");
+console.log('Should be api/books request');
 //app.use('/api/books',inventoryRouter);
 const signInRouter = express.Router();
 //app.use('/api/users', userRoute);
@@ -47,8 +48,8 @@ const signInRouter = express.Router();
 const upload = multer();
 const uploadRouter = express.Router();
 app.use(
-  "/api/upload",
-  uploadRouter.post("/", upload.single("file"), async (req, res) => {
+  '/api/upload',
+  uploadRouter.post('/', upload.single('file'), async (req, res) => {
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
       api_key: process.env.CLOUDINARY_API_KEY,
@@ -68,9 +69,9 @@ app.use(
 );
 
 app.use(
-  "/api/users/signin",
+  '/api/users/signin',
   signInRouter.post(
-    "/",
+    '/',
     expressAsyncHandler(async (req, res) => {
       const email = req.body.email;
       const password = req.body.password;
@@ -87,7 +88,7 @@ app.use(
             isAdmin: dbUser.isAdmin,
             // token: generateToken(dbUser),
           });
-          console.log("in server.js");
+          console.log('in server.js');
           return;
         }
       }
@@ -100,8 +101,8 @@ app.use(
 const discountsRetrieveRouter = express.Router();
 
 app.use(
-  "/api/discounts/allcodes",
-  discountsRetrieveRouter.get("/", async (req, res) => {
+  '/api/discounts/allcodes',
+  discountsRetrieveRouter.get('/', async (req, res) => {
     const discountCodes = await Discount.find();
     res.send(discountCodes);
   })
@@ -116,7 +117,7 @@ app.use(
     expressAsyncHandler(async (req, res) => {
       const id = req.params.id;
 
-      const book = await Book.findOne({_id:id});
+      const book = await Book.findOne({ _id: id });
       //console.log(discountCode.name);
       if (book) {
         res.send(book);
@@ -129,9 +130,9 @@ app.use(
 
 const discountCheckRouter = express.Router();
 app.use(
-  "/api/discounts/find",
+  '/api/discounts/find',
   discountCheckRouter.post(
-    "/",
+    '/',
     expressAsyncHandler(async (req, res) => {
       const name = req.body.name;
 
@@ -152,16 +153,16 @@ app.use(
 
 ////GET REQUESTS
 app.use(
-  "/api/books",
-  inventoryRouter.get("/", async (req, res) => {
+  '/api/books',
+  inventoryRouter.get('/', async (req, res) => {
     const products = await Book.find();
     res.send(products);
   })
 );
 const cartRouter = express.Router();
 app.use(
-  "/api/cartitems",
-  cartRouter.get("/", async (req, res) => {
+  '/api/cartitems',
+  cartRouter.get('/', async (req, res) => {
     const itemsInCart = await CartItem.find();
     res.send(itemsInCart);
   })
@@ -169,8 +170,8 @@ app.use(
 
 const userPullRouter = express.Router();
 app.use(
-  "/api/users/pull",
-  userPullRouter.get("/", async (req, res) => {
+  '/api/users/pull',
+  userPullRouter.get('/', async (req, res) => {
     const totalUsers = await User.find();
     res.send(totalUsers);
   })
@@ -179,8 +180,8 @@ app.use(
 const allOrdersRouter = express.Router();
 
 app.use(
-  "/api/orders/requestall",
-  allOrdersRouter.get("/", async (req, res) => {
+  '/api/orders/requestall',
+  allOrdersRouter.get('/', async (req, res) => {
     const orders = await Order.find();
     res.send(orders);
     //console.log(orders);
@@ -192,8 +193,8 @@ app.use(
 
 const newOrderRouter = express.Router();
 app.use(
-  "/api/orders/neworder",
-  newOrderRouter.post("/", async (req, res) => {
+  '/api/orders/neworder',
+  newOrderRouter.post('/', async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const date = req.body.date;
@@ -208,8 +209,8 @@ app.use(
 ////create account
 const userRouter = express.Router();
 app.use(
-  "/api/users/newaccount",
-  userRouter.post("/", async (req, res) => {
+  '/api/users/newaccount',
+  userRouter.post('/', async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
@@ -232,8 +233,8 @@ app.use(
 
 const newDiscountRouter = express.Router();
 app.use(
-  "/api/discounts/newdiscount",
-  newDiscountRouter.post("/", async (req, res) => {
+  '/api/discounts/newdiscount',
+  newDiscountRouter.post('/', async (req, res) => {
     const name = req.body.name;
     const multi = req.body.multi;
 
@@ -248,8 +249,8 @@ app.use(
 const newBookRouter = express.Router();
 ////create book
 app.use(
-  "/api/books/newbook",
-  newBookRouter.post("/", async (req, res) => {
+  '/api/books/newbook',
+  newBookRouter.post('/', async (req, res) => {
     const title = req.body.title;
     const author = req.body.author;
     const reference = req.body.reference;
@@ -274,8 +275,8 @@ app.use(
 );
 
 app.use(
-  "/api/cartitems/addToCart",
-  cartRouter.post("/", async (req, res) => {
+  '/api/cartitems/addToCart',
+  cartRouter.post('/', async (req, res) => {
     const itemId = req.body.itemId;
     const title = req.body.title;
     const author = req.body.author;
@@ -297,22 +298,22 @@ app.use(
 
 //////DELETE request
 app.use(
-  "/api/cartitems/delete",
-  cartRouter.delete("/:id", async (req, res) => {
+  '/api/cartitems/delete',
+  cartRouter.delete('/:id', async (req, res) => {
     const id = req.params.id;
     await CartItem.findByIdAndRemove(id).exec();
-    res.send("removed from cart");
+    res.send('removed from cart');
 
     //removable.delete();
   })
 );
 const removeDiscount = express.Router();
 app.use(
-  "/api/discounts/delete",
-  removeDiscount.delete("/:id", async (req, res) => {
+  '/api/discounts/delete',
+  removeDiscount.delete('/:id', async (req, res) => {
     const id = req.params.id;
     await Discount.findByIdAndRemove(id).exec();
-    res.send("removed from cart");
+    res.send('removed from cart');
 
     //removable.delete();
   })
@@ -320,11 +321,11 @@ app.use(
 
 const removeUserRouter = express.Router();
 app.use(
-  "/api/users/deleteaccount",
-  removeUserRouter.delete("/:id", async (req, res) => {
+  '/api/users/deleteaccount',
+  removeUserRouter.delete('/:id', async (req, res) => {
     const id = req.params.id;
     await User.findByIdAndRemove(id).exec();
-    res.send("removed from cart");
+    res.send('removed from cart');
 
     //removable.delete();
   })
@@ -332,8 +333,8 @@ app.use(
 
 /////PUT request
 app.use(
-  "/api/cartitems/increase",
-  cartRouter.put("/", async (req, res) => {
+  '/api/cartitems/increase',
+  cartRouter.put('/', async (req, res) => {
     //const updatedQuant = Number(req.body.newQuant);
     const id = req.body._id;
     const edited = await CartItem.findByIdAndUpdate(id, req.body);
@@ -343,8 +344,8 @@ app.use(
 
 const updateBookRouter = express.Router();
 app.use(
-  "/api/books/edititems",
-  updateBookRouter.put("/", async (req, res) => {
+  '/api/books/edititems',
+  updateBookRouter.put('/', async (req, res) => {
     const title = req.body.title;
     const id = req.body._id;
     console.log(title, id);
@@ -357,11 +358,17 @@ app.use(
 ///update Account
 const updateAccountRouter = express.Router();
 app.use(
-  "/api/users/editaccounts",
-  updateAccountRouter.put("/", async (req, res) => {
+  '/api/users/editaccounts',
+  updateAccountRouter.put('/', async (req, res) => {
     const id = req.body._id;
     const update = await User.findByIdAndUpdate(id, req.body);
   })
+);
+
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, '/client/build')));
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, '/client/build/index.html'))
 );
 
 app.use((err, req, res, next) => {
