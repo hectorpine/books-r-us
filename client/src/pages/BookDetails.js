@@ -1,6 +1,6 @@
 import './font.css';
 import './css/BookDetails.css'
-import { useReducer, useEffect } from 'react';
+import {useState, useReducer, useEffect } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import {useParams, Outlet} from "react-router-dom"
@@ -95,9 +95,28 @@ function BookDetails() {
   }
   ////////////////////////////////////////////
 
+
+
+
  
     const {productId} = useParams()
-    const thisProduct = products.find(product => product._id === productId)
+   // const thisProduct = products.find(product => product._id === productId)
+
+     const [thisProduct, setBook] = useState('');
+
+     useEffect(() => {
+       const fetchBook = async () => {
+         const id = productId;
+         const result = await axios.get(`/api/books/book/${id}`);
+
+         setBook((book) => {
+           return result.data;
+         });
+         console.log(thisProduct);
+       };
+
+       fetchBook();
+     });
     
     return(
     <div>

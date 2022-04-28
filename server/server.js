@@ -107,6 +107,26 @@ app.use(
   })
 );
 
+const getABook = express.Router();
+
+app.use(
+  '/api/books/book',
+  getABook.get(
+    '/:id',
+    expressAsyncHandler(async (req, res) => {
+      const id = req.params.id;
+
+      const book = await Book.findOne({_id:id});
+      //console.log(discountCode.name);
+      if (book) {
+        res.send(book);
+      } else {
+        res.send(null);
+      }
+    })
+  )
+);
+
 const discountCheckRouter = express.Router();
 app.use(
   "/api/discounts/find",
