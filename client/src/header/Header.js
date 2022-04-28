@@ -31,6 +31,7 @@ const Header = () => {
     };
     console.log(newUser);
     axios.post('/api/users/newaccount', newUser);
+    window.location.reload();
   }
   ////////////////////////////////////////////////////////////////////////////////////
 
@@ -159,7 +160,7 @@ const Header = () => {
               <span class="material-icons">expand_more</span>
             </div>
             <button class="dropbtn">
-              {loggedOn ? <text>{loggedOn.name}</text> : 'Hi, Sign In!'}
+              {loggedOn ? <text>Hi, {loggedOn.name}!</text> : 'Hi, Sign In!'}
             </button>
             <div class="dropdown-content">
               <div className="signIn">
@@ -208,7 +209,13 @@ const Header = () => {
               </div>
               <div className="createAccount">
                 {loggedOn ? (
-                  ''
+                  <div className='admin-view-btn'> 
+                    <Link to='/admin'>
+                      <button>Admin View</button>
+                    </Link>
+                    
+                  </div>
+                  
                 ) : (
                   <button
                     id="myBtn"

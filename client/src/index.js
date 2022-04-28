@@ -4,10 +4,6 @@ import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import App from './App';
 import Header from "./header/Header"
 import Home from "./pages/Home";
-import MyAccountNav from "./pages/MyAccountNav";
-import MyAccount from "./pages/MyAccount";
-import MyOrders from "./pages/MyOrders";
-//import AdminLogin from "./pages/admin pages/AdminLogin";
 import AdminView from "./pages/admin pages/AdminView";
 import AddNewBook from "./pages/admin pages/AddNewBook";
 import ViewInventory from "./pages/admin pages/ViewInventory";
@@ -23,20 +19,11 @@ export default function Pages() {
     <Router>
       <Routes>
         <Route path="/app" element={<App />} ></Route>
-
         <Route exact path="/" element={<Header />}>
           <Route index element={<Home />} />
           <Route path="cart" element={<Cart/>} />
-      
-          
           <Route path='/:productId' element={<BookDetails />}></Route>
-        
-          <Route path="/myaccount" element={<MyAccountNav />}>
-            <Route index element={<MyAccount />} />
-            <Route path="myorders" element={<MyOrders />} />
-          </Route>
         </Route>
-        
         <Route path="/admin" element={<AdminView />} >
           <Route index element={<AddNewBook />} />
           <Route path="viewinventory" element={<ViewInventory />} />
@@ -44,13 +31,9 @@ export default function Pages() {
           <Route path="discounts" element={<Sales />} />
           <Route path="users" element={<ViewUsers />} />
         </Route>
-
       </Routes>
     </Router>
   );
 }
-
-
-
 
 ReactDOM.render(<Pages />, document.getElementById('root'));

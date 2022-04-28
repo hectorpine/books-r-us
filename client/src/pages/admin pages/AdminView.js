@@ -6,25 +6,15 @@ import { Outlet, Link } from 'react-router-dom';
 
 const AdminView = () =>{
     
-    const signOut = () => {
-        // javascript code to sign out admin goes here
-    }
-/*
-var links = document.getElementById("sidebarLinks");
-var btns = links.getElementsByClassName("adminBtn");
-for (var i = 0; i < btns.length; i++) {
-  btns[i].addEventListener("click", function() {
-  var current = document.getElementsByClassName("adminAddBtn");
-  current[0].className = current[0].className.replace(" adminAddBtn", "");
-  this.className += " adminAddBtn";
-  });
-}
-*/
+
     return <div> 
         <div className="header2"> 
             <div className="admin-header-bkg"></div>
             <h2>Admin View</h2>
-            <button className="signoutBtn" onClick={signOut}>Sign Out</button>
+            <Link to='/'>
+                <button className="signoutBtn">Home Page</button>
+            </Link>
+            
             <div className="hl"></div>
         </div>
         
