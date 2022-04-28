@@ -75,7 +75,9 @@ align-content:flex-end;
 
 .filter-btn-container{
 width: 130px;
-height:100px;
+height:fit-content;
+padding-bottom: 10px;
+padding-left: 5px;
 margin: 32px 0;
 border: 1px solid black;
 border-radius: 15px;

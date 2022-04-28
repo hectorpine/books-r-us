@@ -94,7 +94,7 @@ const OrderHistory = () => {
     <div>
        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
       <div className="orders-container">
-
+    <div className='order-filter'>
       <div class='filter-dropdown'>
         <button class='filter-search-btn'>
             Filter Search
@@ -110,36 +110,32 @@ const OrderHistory = () => {
           <button onClick={() => adminSortCheap(totalOrders)}>SortByCheap</button> 
         </div>
       </div>
-       
+      </div> 
                 
       
         {totalOrders.map((order) => (
           <div key={order._id} sm={6} md={4} lg={3} className="orders">
-            <div className='aaa'>
-              <label className="order-num">Order: </label> {order._id}
+
+              <label className="order-num">Order Number: </label> {order._id}
               <div className='order-labels'>
                 <label>Title</label>
                 <label>Qty</label>
                 <label>Price</label>
               </div>
-                
-               
-            
+
               <div className='order'>
                 {order.items.map((item) => (
-                  <div key={item._id} sm={6} md={4} lg={3} className="mb-3">
-                    <div className="order-info">
+                  <div key={item._id} sm={6} md={4} lg={3} className="order-info">
                       <label>{item.title}</label>
                       <label>{item.quantity}</label>
-                      <label>${item.price}</label>
-                    </div>
+                      <label>${item.price}</label>            
                   </div>
                 ))}
               </div>
-              <div className='order-total'>
-                  <label>Total: ${order.total}</label>
-                </div>
-            </div>
+              
+              <label className='order-total'>Total: </label>${order.total}
+             
+       
           </div>
         ))}
         {''}

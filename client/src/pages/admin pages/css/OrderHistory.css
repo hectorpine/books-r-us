@@ -2,15 +2,56 @@
     margin: -260px 250px;
 }
 
-.order{
-    padding-bottom: 50px;
-}
+
 
 .order-info{
     padding-bottom: 20px;
 }
 
+.order-num{
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.order-labels{
+    display: flex;
+    flex-direction: row;
+}
+
+.order-labels label{
+    width: 100%;
+    font-weight: 600;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 100px;
+    padding-right: 100px;
+    text-align: center; 
+}
+
+.order-info{
+    display: flex;
+    flex-direction: row;
+}
+
+.order-info label{
+    background-color: lightgrey;
+    width: 100%;
+    padding-left: 30px;
+    padding-right: 30px;
+    text-align: center;
+}
+
+.order-filter{
+    position: absolute;
+    margin: -250px 60%;
+}
+
+.orders label.order-total{
+    font-size: 17px;
+    font-weight: 600;
+}
+
 .orders{
-    border: solid black;
+    padding-bottom: 50px;
 }
 
